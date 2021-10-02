@@ -1,0 +1,2 @@
+#define GLOBAL static __attribute__((used))
+#define GETTER_VAR(vartype, varname) static __attribute__((used)) vartype varname; extern "C" vartype Get_##varname(){return varname;}

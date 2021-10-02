@@ -24,7 +24,8 @@ GLOBAL vector <DLL*> modDLLs; // Every mod we've loaded
 GLOBAL vector <DLL*> legacyDLLs; // cwmods
 GLOBAL HMODULE hSelf; // A handle to ourself, to prevent being unloaded
 GLOBAL void** initterm_eReference; // A pointer-pointer to a function which is run extremely soon after starting, or after being unpacked
-GETTER_VAR(void*, initterm_e); // A pointer to that function
+
+GETTER_VAR(void*, initterm_e) // A pointer to that function
 
 #include "callbacks/ChatHandler.h"
 #include "callbacks/P2PRequestHandler.h"
