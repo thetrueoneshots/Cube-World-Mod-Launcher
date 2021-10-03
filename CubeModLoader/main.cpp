@@ -6,6 +6,8 @@
 #include "crc.h"
 #include "mutex.h"
 
+#include "macros/macros.h"
+
 #define MOD_MAJOR_VERSION 7
 #define MOD_MINOR_VERSION 1
 
@@ -49,6 +51,12 @@ GETTER_VAR(void*, initterm_e) // A pointer to that function
 #include "callbacks/ChunkRemeshHandler.h"
 #include "callbacks/ChunkRemeshedHandler.h"
 
+function_overwrite(0x4F080, getArmor)
+extern "C" float getArmor(void* creature)
+{
+    return 100.0f;
+}
+
 void SetupHandlers() {
     SetupChatHandler();
     SetupP2PRequestHandler();
@@ -71,6 +79,8 @@ void SetupHandlers() {
 	SetupCreatureManaGenerationCalculatedHandler();
 	SetupChunkRemeshHandler();
 	SetupChunkRemeshedHandler();
+
+    function_setup(getArmor);
 }
 
 

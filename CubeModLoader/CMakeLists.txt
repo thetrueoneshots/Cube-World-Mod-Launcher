@@ -4,4 +4,4 @@ add_library (CubeModLoader SHARED
     crc.cpp
     DLL.cpp
     main.cpp
-    mutex.cpp)
+    mutex.cpp "macros/macros.h")
