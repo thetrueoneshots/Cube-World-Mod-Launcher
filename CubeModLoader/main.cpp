@@ -52,10 +52,23 @@ GETTER_VAR(void*, initterm_e) // A pointer to that function
 #include "callbacks/ChunkRemeshHandler.h"
 #include "callbacks/ChunkRemeshedHandler.h"
 
-overwrite_function(0x4F080, getArmor)
-extern "C" float getArmor(void* creature)
+GLOBAL std::map<std::string, std::vector<void*>>* g_Subscriptions;
+
+overwrite_function(0x4F080, cube__Creature__GetArmor)
+extern "C" float cube__Creature__GetArmor(cube::Creature* creature)
 {
-    return 100.0f;
+    float armor = 100;
+
+    auto it = g_Subscriptions->find("cube::Creature::OnGetArmor");
+    if (it != g_Subscriptions->end())
+    {
+        for (auto& func : it->second)
+        {
+            ((void (*)(cube::Creature*, float*))func)(creature, &armor);
+        }
+    }
+
+    return armor;
 }
 
 void SetupHandlers() {
@@ -81,7 +94,7 @@ void SetupHandlers() {
 	SetupChunkRemeshHandler();
 	SetupChunkRemeshedHandler();
 
-    setup_function(getArmor);
+    setup_function(cube__Creature__GetArmor);
 }
 
 
@@ -158,21 +171,16 @@ extern "C" void StartMods() {
 		dll->mod = ((GenericMod*(*)())dll->MakeMod)();
     }
 
-    std::map<std::string, std::vector<void*>*>* subscriptions = new std::map<std::string, std::vector<void*>*>();
+    g_Subscriptions = new std::map<std::string, std::vector<void*>>();
 
     
     for (DLL* dll: modDLLs) {
-		dll->mod->Initialize(subscriptions);
+		dll->mod->Initialize(g_Subscriptions);
     }
 
-    for (auto it = subscriptions->begin(); it != subscriptions->end(); it++)
+    for (auto it = g_Subscriptions->begin(); it != g_Subscriptions->end(); it++)
     {
-        for (auto func : *it->second)
-        {
-            ((void (*)(const char*, const char*))func)("Msg", "Test message callback!");
-        }
-        
-        sprintf(msg, "Function %s has %d callbacks registered.\n", it->first.c_str(), (int)it->second->size());
+        sprintf(msg, "Function %s has %d callbacks registered.\n", it->first.c_str(), (int)it->second.size());
         Popup("Msg", msg);
     }
 
