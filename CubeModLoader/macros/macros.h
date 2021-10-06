@@ -1,6 +1,6 @@
 #pragma once
 
-#define function_overwrite(offset, function)\
+#define overwrite_function(offset, function)\
 void ASM_##function() {\
 	asm(".intel_syntax \n"\
 		"call "#function" \n"\
@@ -11,4 +11,4 @@ void setup_##function() {\
 	WriteFarJMP(Offset(base, offset), (void*)&ASM_##function);\
 }
 
-#define function_setup(function) setup_##function();
+#define setup_function(function) setup_##function();

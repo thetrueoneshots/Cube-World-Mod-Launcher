@@ -1,4 +1,4 @@
-extern "C" int ChunkRemeshedHandler(void* zone) {
+extern "C" int ChunkRemeshedHandler(cube::Zone* zone) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnChunkRemeshedPriority == (GenericMod::Priority)priority) {

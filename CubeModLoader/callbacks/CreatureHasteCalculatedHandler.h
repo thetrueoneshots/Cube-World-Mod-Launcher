@@ -1,4 +1,4 @@
-extern "C" int CreatureHasteCalculatedHandler(void* creature, float* haste) {
+extern "C" int CreatureHasteCalculatedHandler(cube::Creature * creature, float* haste) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnCreatureHasteCalculatedPriority == (GenericMod::Priority)priority) {

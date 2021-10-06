@@ -5,10 +5,11 @@
 #include "DLL.h"
 #include "crc.h"
 #include "mutex.h"
+#include <map>
 
 #include "macros/macros.h"
 
-#define MOD_MAJOR_VERSION 7
+#define MOD_MAJOR_VERSION 8
 #define MOD_MINOR_VERSION 1
 
 #define CUBE_VERSION "1.0.0-1"
@@ -51,7 +52,7 @@ GETTER_VAR(void*, initterm_e) // A pointer to that function
 #include "callbacks/ChunkRemeshHandler.h"
 #include "callbacks/ChunkRemeshedHandler.h"
 
-function_overwrite(0x4F080, getArmor)
+overwrite_function(0x4F080, getArmor)
 extern "C" float getArmor(void* creature)
 {
     return 100.0f;
@@ -80,7 +81,7 @@ void SetupHandlers() {
 	SetupChunkRemeshHandler();
 	SetupChunkRemeshedHandler();
 
-    function_setup(getArmor);
+    setup_function(getArmor);
 }
 
 
@@ -123,7 +124,7 @@ extern "C" void StartMods() {
         MUST_IMPORT(dll, ModMajorVersion);
         MUST_IMPORT(dll, ModMinorVersion);
         MUST_IMPORT(dll, ModPreInitialize);
-		MUST_IMPORT(dll, MakeMod);
+		MUST_IMPORT(dll, MakeMod)
     }
 
     // Ensure version compatibility
@@ -148,7 +149,7 @@ extern "C" void StartMods() {
 			Popup("Error", msg);
 			exit(1);
 		}
-		
+        
 	}
 
     // Run Initialization routines on all mods
@@ -157,8 +158,22 @@ extern "C" void StartMods() {
 		dll->mod = ((GenericMod*(*)())dll->MakeMod)();
     }
 
+    std::map<std::string, std::vector<void*>*>* subscriptions = new std::map<std::string, std::vector<void*>*>();
+
+    
     for (DLL* dll: modDLLs) {
-		dll->mod->Initialize();
+		dll->mod->Initialize(subscriptions);
+    }
+
+    for (auto it = subscriptions->begin(); it != subscriptions->end(); it++)
+    {
+        for (auto func : *it->second)
+        {
+            ((void (*)(const char*, const char*))func)("Msg", "Test message callback!");
+        }
+        
+        sprintf(msg, "Function %s has %d callbacks registered.\n", it->first.c_str(), (int)it->second->size());
+        Popup("Msg", msg);
     }
 
 	// Load legacy cwmods. Don't use this.

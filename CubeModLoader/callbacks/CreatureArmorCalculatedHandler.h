@@ -1,4 +1,4 @@
-extern "C" int CreatureArmorCalculatedHandler(void* creature, float* armor) {
+extern "C" int CreatureArmorCalculatedHandler(cube::Creature* creature, float* armor) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnCreatureArmorCalculatedPriority == (GenericMod::Priority)priority) {

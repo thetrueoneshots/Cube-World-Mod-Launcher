@@ -2,7 +2,7 @@
 #define DLL_H
 #include <iostream>
 #include <windows.h>
-#include "GenericMod.h"
+#include "CWSDK/cwsdk.h"
 
 class DLL
 {

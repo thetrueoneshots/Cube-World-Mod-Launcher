@@ -1,4 +1,4 @@
-extern "C" int CreatureRegenerationCalculatedHandler(void* creature, float* regeneration) {
+extern "C" int CreatureRegenerationCalculatedHandler(cube::Creature * creature, float* regeneration) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnCreatureRegenerationCalculatedPriority == (GenericMod::Priority)priority) {

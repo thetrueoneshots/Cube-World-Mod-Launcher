@@ -1,4 +1,4 @@
-extern "C" int CreatureResistanceCalculatedHandler(void* creature, float* resistance) {
+extern "C" int CreatureResistanceCalculatedHandler(cube::Creature * creature, float* resistance) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnCreatureResistanceCalculatedPriority == (GenericMod::Priority)priority) {

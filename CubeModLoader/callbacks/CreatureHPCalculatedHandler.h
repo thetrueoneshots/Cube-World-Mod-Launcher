@@ -1,4 +1,4 @@
-extern "C" int CreatureHPCalculatedHandler(void* creature, float* hp) {
+extern "C" int CreatureHPCalculatedHandler(cube::Creature * creature, float* hp) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnCreatureHPCalculatedPriority == (GenericMod::Priority)priority) {
