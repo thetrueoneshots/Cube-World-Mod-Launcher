@@ -54,22 +54,7 @@ GETTER_VAR(void*, initterm_e) // A pointer to that function
 
 GLOBAL std::map<std::string, std::vector<void*>>* g_Subscriptions;
 
-overwrite_function(0x4F080, cube__Creature__GetArmor)
-extern "C" float cube__Creature__GetArmor(cube::Creature* creature)
-{
-    float armor = 100;
-
-    auto it = g_Subscriptions->find("cube::Creature::OnGetArmor");
-    if (it != g_Subscriptions->end())
-    {
-        for (auto& func : it->second)
-        {
-            ((void (*)(cube::Creature*, float*))func)(creature, &armor);
-        }
-    }
-
-    return armor;
-}
+#include "functions/functions.h"
 
 void SetupHandlers() {
     SetupChatHandler();
@@ -94,7 +79,8 @@ void SetupHandlers() {
 	SetupChunkRemeshHandler();
 	SetupChunkRemeshedHandler();
 
-    setup_function(cube__Creature__GetArmor);
+    // New overwritten functions
+    SetupCubeWorldFunctionOverwrites();
 }
 
 
