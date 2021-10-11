@@ -2,9 +2,11 @@
 #include <iostream>
 #include <windows.h>
 #include <vector>
+#include "CWSDK/cwsdk.h"
 #include "DLL.h"
 #include "crc.h"
 #include "mutex.h"
+#include "macros.h"
 
 #define MOD_MAJOR_VERSION 7
 #define MOD_MINOR_VERSION 1

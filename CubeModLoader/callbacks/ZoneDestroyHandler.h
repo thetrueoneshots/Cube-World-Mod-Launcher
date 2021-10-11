@@ -1,4 +1,4 @@
-extern "C" int ZoneDestroyHandler(void* zone) {
+extern "C" int ZoneDestroyHandler(cube::Zone* zone) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnZoneDestroyPriority == (GenericMod::Priority)priority) {

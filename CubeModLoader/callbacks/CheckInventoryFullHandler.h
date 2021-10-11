@@ -1,4 +1,4 @@
-extern "C" int CheckInventoryFullHandler(void* player, void* item) {
+extern "C" int CheckInventoryFullHandler(cube::Creature* player, cube::Item* item) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnCheckInventoryFullPriority == (GenericMod::Priority)priority) {

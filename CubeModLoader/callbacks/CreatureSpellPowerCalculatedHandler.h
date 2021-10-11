@@ -1,4 +1,4 @@
-extern "C" int CreatureSpellPowerCalculatedHandler(void* creature, float* power) {
+extern "C" int CreatureSpellPowerCalculatedHandler(cube::Creature* creature, float* power) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnCreatureSpellPowerCalculatedPriority == (GenericMod::Priority)priority) {

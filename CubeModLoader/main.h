@@ -45,9 +45,4 @@ dllname->name = GetProcAddress(dllname->handle, #name);
 
 void* Offset(void* x1, uint64_t x2);
 
-
-
-
-
-
 #endif // MAIN_H

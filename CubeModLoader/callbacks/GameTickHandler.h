@@ -1,4 +1,4 @@
-extern "C" void GameTickHandler(void* game) {
+extern "C" void GameTickHandler(cube::Game* game) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnGameTickPriority == (GenericMod::Priority)priority) {
