@@ -9,7 +9,7 @@
 #include "macros.h"
 
 #define MOD_MAJOR_VERSION 7
-#define MOD_MINOR_VERSION 1
+#define MOD_MINOR_VERSION 2
 
 #define CUBE_VERSION "1.0.0-1"
 #define CUBE_PACKED_CRC 0xC7682619
@@ -51,6 +51,7 @@ GETTER_VAR(void*, initterm_e); // A pointer to that function
 #include "callbacks/ChunkRemeshedHandler.h"
 
 void SetupHandlers() {
+    setup_function(cube__Creature__GetArmor)
     SetupChatHandler();
     SetupP2PRequestHandler();
     SetupCheckInventoryFullHandler();
@@ -61,7 +62,6 @@ void SetupHandlers() {
 	SetupGetKeyboardStateHandler();
 	SetupGetMouseStateHandler();
 	SetupPresentHandler();
-	SetupCreatureArmorCalculatedHandler();
 	SetupCreatureCriticalCalculatedHandler();
 	SetupCreatureAttackPowerCalculatedHandler();
 	SetupCreatureSpellPowerCalculatedHandler();
