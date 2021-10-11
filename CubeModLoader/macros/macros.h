@@ -3,7 +3,9 @@
 #define overwrite_function(offset, function)\
 void ASM_##function() {\
 	asm(".intel_syntax \n"\
+		PREPARE_STACK \
 		"call "#function" \n"\
+		RESTORE_STACK \
 		"retn \n"\
 	);\
 }\

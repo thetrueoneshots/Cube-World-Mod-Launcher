@@ -1,2 +1,3 @@
 #define GLOBAL static __attribute__((used))
 #define GETTER_VAR(vartype, varname) static __attribute__((used)) vartype varname; extern "C" vartype Get_##varname(){return varname;}
+#define overwrite_function(offset, function) void ASM_##function() { asm(".intel_syntax \n" PREPARE_STACK "call "#function" \n" RESTORE_STACK "retn \n" );}void setup_##function() { WriteFarJMP(Offset(base, offset), (void*)&ASM_##function);}

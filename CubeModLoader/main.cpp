@@ -54,6 +54,14 @@ GETTER_VAR(void*, initterm_e) // A pointer to that function
 
 GLOBAL std::map<std::string, std::vector<void*>>* g_Subscriptions;
 
+GLOBAL void* CWBase() {
+    return base;
+}
+
+GLOBAL void* CWOffset(size_t offset) {
+    return (void*)((char*)base + offset);
+}
+
 #include "functions/functions.h"
 
 void SetupHandlers() {

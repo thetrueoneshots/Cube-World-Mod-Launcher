@@ -2,6 +2,7 @@
 #define MAIN_H
 
 #include "DLL.h"
+#include "CWSDK/cwsdk.h"
 #include <vector>
 
 #define no_optimize __attribute__((optimize("O0")))
