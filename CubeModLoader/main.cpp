@@ -2,11 +2,13 @@
 #include <iostream>
 #include <windows.h>
 #include <vector>
+#define MODLOADER 1
 #include "CWSDK/cwsdk.h"
 #include "DLL.h"
 #include "crc.h"
 #include "mutex.h"
 #include "macros.h"
+#include "../CubeModLoader/CWSDK/cwsdk.h"
 
 #define MOD_MAJOR_VERSION 7
 #define MOD_MINOR_VERSION 2
@@ -38,7 +40,6 @@ GETTER_VAR(void*, initterm_e); // A pointer to that function
 #include "callbacks/GetKeyboardStateHandler.h"
 #include "callbacks/GetMouseStateHandler.h"
 #include "callbacks/PresentHandler.h"
-#include "callbacks/CreatureArmorCalculatedHandler.h"
 #include "callbacks/CreatureCriticalCalculatedHandler.h"
 #include "callbacks/CreatureAttackPowerCalculatedHandler.h"
 #include "callbacks/CreatureSpellPowerCalculatedHandler.h"
@@ -50,8 +51,15 @@ GETTER_VAR(void*, initterm_e); // A pointer to that function
 #include "callbacks/ChunkRemeshHandler.h"
 #include "callbacks/ChunkRemeshedHandler.h"
 
+#include "callbacks/gui/cube__StartMenuWidget__Draw.h"
+#include "callbacks/creature/cube__Creature__GetArmor.h"
+#include "callbacks/game/cube__Game__MouseUp.h"
+
 void SetupHandlers() {
-    setup_function(cube__Creature__GetArmor)
+    setup_function(cube__Creature__GetArmor);
+    setup_function(cube__StartMenuWidget__Draw);
+    setup_function(cube__Game__MouseUp);
+     
     SetupChatHandler();
     SetupP2PRequestHandler();
     SetupCheckInventoryFullHandler();
@@ -90,6 +98,7 @@ extern "C" void StartMods() {
     already_loaded_mods = true;
     already_loaded_mods_mtx.unlock();
 
+    ModPreInitialize();
     SetupHandlers();
 
     //Find mods

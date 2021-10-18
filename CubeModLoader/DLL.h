@@ -2,6 +2,7 @@
 #define DLL_H
 #include <iostream>
 #include <windows.h>
+#define MODLOADER 1
 #include "CWSDK/cwsdk.h"
 //#include "GenericMod.h"
 

@@ -5,4 +5,5 @@ add_library (CubeModLoader SHARED
     crc.cpp
     DLL.cpp
     main.cpp
-    mutex.cpp "macros.h")
+    mutex.cpp "macros.h" "callbacks/gui/cube__StartMenuWidget__Draw.h" "callbacks/game/cube__Game__MouseUp.h")
+target_link_libraries (CubeModLoader LINK_PUBLIC CWSDK)
