@@ -16,6 +16,8 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 	// Color rotation of the modded text
 	static float i = 0;
 	static int dir = 0;
+	int height;
+
 	if (dir == 0)
 	{
 		i += 0.01f;
@@ -39,13 +41,15 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 	FloatVector2 pos = FloatVector2(0, 0);
 	std::wstring txt_modded = L"Modded";
 
+	height = - widget->game->height / 3;
+
 	// Draw modded text
-	widget->SetTextSize(100.0f);
+	widget->SetTextSize(200.0f);
 	widget->SetBorderSize(18.0f);
 	widget->SetTextPivot(cube::TextPivot::Center);
 	widget->SetBorderColor(&border_color);
 	widget->SetTextColor(&modded_color);
-	widget->DrawBaseWidgetText(&pos, &txt_modded, 0.5* widget->GetXSize(), -300);
+	widget->DrawBaseWidgetText(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
 }
 
 // Todo: Game version
@@ -55,10 +59,14 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 // Todo: Link to bagel his youtube?
 extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 {
-	float width;
+	const static float text_size = 36.0f; // Original	18.0f
+	const static float border_size = 4.0f; // Original	4.0f
 	const int num_btns = 4;
+
+	float width;
 	int y_offset = -20;
 	int btn_height = 50;
+	bool options_active;
 
 	FloatVector2 pos = FloatVector2(0, 0);
 	FloatVector2 mouse_pos;
@@ -67,13 +75,13 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	FloatRGBA disabled_color(1.0f, 1.0f, 1.0f, 0.2f);
 	FloatRGBA border_color(0.0f, 0.0f, 0.0f, 1.0f);
 
-	DrawModdedText(widget);
+	std::wstring font = L"resource2.dat";
 	
 	std::wstring btn_txt[num_btns] = {
 		L"Start Game",
 		L"Continue",
 		L"Options",
-		L"Exit"
+		L"Exit",
 	};
 
 	cube::StartMenuWidget::HoverState states[num_btns] = {
@@ -83,11 +91,15 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 		cube::StartMenuWidget::HoverState::Exit,
 	};
 
+	DrawModdedText(widget);
+
 	mouse_pos = *widget->GetRelativeMousePosition(&mouse_pos);
 	width = widget->GetXSize();
+	options_active = widget->game->gui.options_widget->node->display->IsVisible();
 
-	widget->SetTextSize(18.0f);
-	widget->SetBorderSize(4.0f);
+	widget->SetScalableFont(&font);
+	widget->SetTextSize(text_size);
+	widget->SetBorderSize(border_size);
 	widget->SetTextPivot(cube::TextPivot::Center);
 	widget->SetBorderColor(&border_color);
 	widget->hover_state = cube::StartMenuWidget::HoverState::None;
@@ -96,7 +108,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	for (int i = 0; i < num_btns; i++)
 	{
 		int btn_y = y_offset + i * btn_height;
-		if (!BtnIsHovered(&mouse_pos, width, btn_y))
+		if (!BtnIsHovered(&mouse_pos, width, btn_y) || options_active)
 		{
 			widget->SetTextColor(&text_color);
 		}
