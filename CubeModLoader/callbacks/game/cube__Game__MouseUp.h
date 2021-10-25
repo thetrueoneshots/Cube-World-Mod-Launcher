@@ -23,7 +23,6 @@ extern "C" void cube__Game__MouseUp(cube::Game* game, cube::MouseButton mouse_bu
 				// Todo: Check if needed
 				game->world->CW_2E0B50();
 				break;
-			case cube::StartMenuWidget::HoverState::Mods:
 			case cube::StartMenuWidget::HoverState::Options:
 				game->gui.options_widget->node->display->SetVisibility(game->gui.options_widget->node->display->visibility.current_frame, 1);
 				break;

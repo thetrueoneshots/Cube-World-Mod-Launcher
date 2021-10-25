@@ -56,7 +56,7 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 {
 	float width;
-	int num_btns = 5;
+	const int num_btns = 4;
 	int y_offset = -20;
 	int btn_height = 50;
 
@@ -69,16 +69,15 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 
 	DrawModdedText(widget);
 	
-	std::wstring btn_txt[5] = {
+	std::wstring btn_txt[num_btns] = {
 		L"Start Game",
-		L"Mods",
 		L"Continue",
 		L"Options",
 		L"Exit"
 	};
-	cube::StartMenuWidget::HoverState states[5] = {
+
+	cube::StartMenuWidget::HoverState states[num_btns] = {
 		cube::StartMenuWidget::HoverState::StartGame,
-		cube::StartMenuWidget::HoverState::Mods,
 		cube::StartMenuWidget::HoverState::Continue,
 		cube::StartMenuWidget::HoverState::Options,
 		cube::StartMenuWidget::HoverState::Exit,
