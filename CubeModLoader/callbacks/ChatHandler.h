@@ -1,4 +1,4 @@
-extern "C" int ChatHandler(void* msg) {
+extern "C" int ChatHandler(std::wstring* msg) {
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnChatPriority == (GenericMod::Priority)priority) {
