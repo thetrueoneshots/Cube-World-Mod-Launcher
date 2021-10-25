@@ -49,7 +49,7 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 	widget->SetTextPivot(cube::TextPivot::Center);
 	widget->SetBorderColor(&border_color);
 	widget->SetTextColor(&modded_color);
-	widget->DrawBaseWidgetText(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
+	widget->DrawText(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
 }
 
 // Todo: Game version
@@ -75,7 +75,9 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	FloatRGBA disabled_color(1.0f, 1.0f, 1.0f, 0.2f);
 	FloatRGBA border_color(0.0f, 0.0f, 0.0f, 1.0f);
 
-	std::wstring font = L"resource2.dat";
+
+	std::wstring font1 = L"resource1.dat";
+	std::wstring font2 = L"resource2.dat";
 	
 	std::wstring btn_txt[num_btns] = {
 		L"Start Game",
@@ -91,13 +93,19 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 		cube::StartMenuWidget::HoverState::Exit,
 	};
 
+	std::wstring credits[] = {
+		L"Copyright (c) 2019 Picroma e.K.",
+		L"Youtube for mods: TheBagel3",
+		L"Modloader by ChrisMiuchiz and Nichiren.",
+	};
+
+	widget->SetScalableFont(&font2);
 	DrawModdedText(widget);
 
 	mouse_pos = *widget->GetRelativeMousePosition(&mouse_pos);
 	width = widget->GetXSize();
 	options_active = widget->game->gui.options_widget->node->display->IsVisible();
 
-	widget->SetScalableFont(&font);
 	widget->SetTextSize(text_size);
 	widget->SetBorderSize(border_size);
 	widget->SetTextPivot(cube::TextPivot::Center);
@@ -133,8 +141,74 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 			}
 		}
 
-		widget->DrawBaseWidgetText(&pos, &btn_txt[i], 0.5 * width, btn_y);
+		widget->DrawText(&pos, &btn_txt[i], 0.5 * width, btn_y);
 	}
+
+	widget->SetScalableFont(&font1);
+	widget->SetTextPivot(cube::TextPivot::Left);
+	widget->SetTextSize(12.0f);
+	widget->SetBorderSize(3.0f);
+	widget->SetTextColor(&text_color);
+
+	FloatVector2 position;
+	position = *widget->GetSomeVector2(&position);
+
+	Matrix4 mat;
+	widget->node->CW_100EE0(&mat);
+	float f9 = 10.0f;
+	float f1 = widget->game->height - 15;
+	float f8 = mat._24;
+	float f3 = f8;
+	f3 *= f1;
+	float f12 = mat._14;
+	float f0 = f12;
+	f0 *= f9;
+	f3 += f0;
+	f3 += mat._44;
+	float f13 = mat._22;
+	float f2 = f13;
+	f2 *= f1;
+	float f10 = mat._12;
+	f0 = f10;
+	f0 *= f9;
+	f2 += f0;
+	f2 += mat._42;
+	float f11 = mat._21;
+	float f7 = f11;
+	f7 *= f1;
+	float f14 = mat._11;
+	f0 = f14;
+	f0 *= f9;
+	f7 += f0;
+	f0 += mat._41;
+	f9 = 1.0f;
+	float f6 = f9;
+	f6 /= f3;
+	f7 *= f6;
+	f6 *= f2;
+
+	int offset = 20;
+	for (int i = 0; i < 3; i++)
+	{
+		widget->DrawText(&pos, &credits[i], f7 + (width - widget->game->width) / 2, f6 - i * offset);
+		widget->SetScalableFont(&font2);
+		widget->SetTextSize(20.0f);
+		offset = 25;
+	}
+
+	std::wstring versions[] = {
+		L"Game: 1.0.0-1",
+		L"Modloader: " + to_wstring(MOD_MAJOR_VERSION) + L"." + to_wstring(MOD_MINOR_VERSION),
+	};
+	widget->SetScalableFont(&font1);
+	widget->SetTextSize(12.0f);
+	widget->SetTextPivot(cube::TextPivot::Right);
+
+	for (int i = 0; i < 2; i++)
+	{
+		widget->DrawText(&pos, &versions[i], -f7 + (width + widget->game->width) / 2, f6 - i * 20);
+	}
+	
 };
 
 overwrite_function(0x291210, cube__StartMenuWidget__Draw);
