@@ -52,6 +52,29 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 	widget->DrawText(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
 }
 
+/* Not called, but an idea (not working) of how to add new widgets*/
+/*void TestCode(cube::StartMenuWidget* widget, bool active)
+{
+	return;
+	static std::wstring* name = new std::wstring(L"ModWidget");
+	static plasma::Node* background = widget->game->gui.blackwidget_node_0->CopyMaybe(widget->d3d11_engine->root_node);
+	static cube::ModWidget* mod_widget = (cube::ModWidget*)new char[sizeof(cube::ModWidget)];//new cube::ModWidget(widget->game, widget->d3d11_engine, background, name);
+	static bool init = false;
+
+	if (!background)
+	{
+		return;
+	}
+
+	if (!init)
+	{
+		mod_widget->ctor(widget->d3d11_engine, background, name);
+		mod_widget->game = widget->game;
+	}
+
+	background->display->SetVisibility(background->display->visibility.current_frame, active ? 1 : 0);
+}*/
+
 // Todo: Game version
 // Todo: Picroma credits
 // Todo: Show modloader version
@@ -154,7 +177,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	position = *widget->GetSomeVector2(&position);
 
 	Matrix4 mat;
-	widget->node->CW_100EE0(&mat);
+	widget->node->LoadSomeMatrix(&mat);
 	float f9 = 10.0f;
 	float f1 = widget->game->height - 15;
 	float f8 = mat._24;
