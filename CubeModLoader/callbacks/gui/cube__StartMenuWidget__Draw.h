@@ -57,7 +57,7 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 {
 	return;
 	static std::wstring* name = new std::wstring(L"ModWidget");
-	static plasma::Node* background = widget->game->gui.blackwidget_node_0->CopyMaybe(widget->d3d11_engine->root_node);
+	static plasma::Node* background = widget->game->gui.blackwidget_node_0->CreateCopy(widget->d3d11_engine->root_node);
 	static cube::ModWidget* mod_widget = (cube::ModWidget*)new char[sizeof(cube::ModWidget)];//new cube::ModWidget(widget->game, widget->d3d11_engine, background, name);
 	static bool init = false;
 
