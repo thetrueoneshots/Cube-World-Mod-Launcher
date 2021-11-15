@@ -1,38 +1,70 @@
 #pragma once
 #include <string>
 #include "cwsdk.h"
-// Todo: Remove from callback
-struct SomeStruct {
-	char gap[0x200];
-};
+
+void Stub(cube::Game* game)
+{
+	wchar_t buff[250];
+	std::wstring wstr_aura_bullwark(L"aura:bulwark");
+	plasma::Map<plasma::Node>* map = &game->gui.icon_node_map;
+	
+	swprintf_s(buff, 250, L"Size of map: %d\n", map->size);
+	game->PrintMessage(buff);
+
+	plasma::Map<plasma::Node>::Result r;
+	map->FindOrCreateNode(&r, 16);
+	r.node->val->name = L"not flamerush xD";
+
+	swprintf_s(buff, 250, L"Size of map: %d\n", game->gui.icon_node_map.size);
+	game->PrintMessage(buff);
+
+	if (game->gui.icon_node_map.size > 0)
+	{
+		plasma::Map<plasma::Node>::Node* node = game->gui.icon_node_map.head->parent;
+
+		while (node->isnil == 0)
+		{
+			swprintf_s(buff, 250, L"Key: %d\n", node->key);
+			game->PrintMessage(buff);
+			swprintf_s(buff, 250, L"Val: %s\n", node->val->name.c_str());
+			game->PrintMessage(buff);
+			node = node->right;
+		}
+	}
+}
 
 // Todo: Remove from callback
 void DrawPLXOnScreen(cube::Game* game)
 {
-	std::string encode("PlasmaXGraphics");
-	long long r8 = 0x3FFFFFFFFFFE5;
-	size_t eax = encode.size();
-	if (eax > 0)
-	{
-		size_t r10 = encode.capacity();
-		int i = 0;
-		while (i < eax)
-		{
-			r8 *= 31;
-			r8 += encode[i];
-			i++;
-		}
-	}
-
-	SomeStruct s = {};
-	((void (*)(void*, int, void*))CWOffset(0xF9110))(&s, 1, &r8);
-
-	//plasma::Node* node = game->gui.blackwidget_node_0->CreateCopy(game->plasma_engine->root_node);
-	//node->display->SetVisibility(true);
 	std::wstring wstr_empty(L"");
-	std::wstring wstr_iconsPLX(L"icons.plx");
-	plasma::Node* node = game->plasma_engine->CreateNode(game->plasma_engine->root_node, &wstr_empty);
-	game->plasma_engine->LoadNodeFromFile(&wstr_iconsPLX, node, 32, 0, &s);
+	std::wstring wstr_guiPLX(L"gui.plx");
+	//plasma::Node* guiNode = game->plasma_engine->CreateNode(game->plasma_engine->root_node, &wstr_empty);
+	plasma::Node* guiNode = game->plasma_engine->CreateNode(nullptr, &wstr_empty);
+	game->plasma_engine->LoadNodeFromFile(&wstr_guiPLX, guiNode, 32, 0);
+
+	std::wstring wstr_blackwidget(L"blackwidget");
+	std::wstring wstr_left_button(L"leftbutton");
+	std::wstring wstr_right_button(L"rightbutton");
+	std::wstring wstr_button2(L"button2");
+	plasma::Node* blackwidget = guiNode->FindChildByName(&wstr_blackwidget);
+	plasma::Node* left_button = guiNode->FindChildByName(&wstr_left_button);
+	plasma::Node* right_button = guiNode->FindChildByName(&wstr_right_button);
+	plasma::Node* button2 = guiNode->FindChildByName(&wstr_button2);
+
+
+	//blackwidget->cw_3347F0(nullptr);
+	plasma::Node* blackwidget_cpy = blackwidget->CreateCopy(game->plasma_engine->root_node);
+	blackwidget->SetVisibility(true);
+
+	cube::OptionsWidget* widget = (cube::OptionsWidget*)new char[sizeof(cube::OptionsWidget)];
+	widget->ctor(game, blackwidget_cpy, left_button, right_button, button2);
+
+	// Most likely widget scale
+	// widget->Translate(game->width, game->height, 0);
+
+
+	//game->plasma_engine->root_node->cw_3347F0(blackwidget);
+	//blackwidget->Translate(0, 0, game->width / 2, game->height / 2);
 }
 
 extern "C" void GameTickHandler(cube::Game* game) {
@@ -41,7 +73,8 @@ extern "C" void GameTickHandler(cube::Game* game) {
 	{
 		init = true;
 
-		DrawPLXOnScreen(game);
+		Stub(game);
+		//DrawPLXOnScreen(game);
 	}
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
