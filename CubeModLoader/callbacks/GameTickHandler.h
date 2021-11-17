@@ -6,12 +6,12 @@ void Stub(cube::Game* game)
 {
 	wchar_t buff[250];
 	std::wstring wstr_aura_bullwark(L"aura:bulwark");
-	plasma::Map<plasma::Node>* map = &game->gui.icon_node_map;
+	plasma::Map<long long, plasma::Node*>* map = &game->gui.icon_node_map;
 	
 	swprintf_s(buff, 250, L"Size of map: %d\n", map->size);
 	game->PrintMessage(buff);
 
-	plasma::Map<plasma::Node>::Result r;
+	plasma::Map<long long, plasma::Node*>::Result r;
 	map->FindOrCreateNode(&r, 16);
 	r.node->val->name = L"not flamerush xD";
 
@@ -20,7 +20,7 @@ void Stub(cube::Game* game)
 
 	if (game->gui.icon_node_map.size > 0)
 	{
-		plasma::Map<plasma::Node>::Node* node = game->gui.icon_node_map.head->parent;
+		plasma::Map<long long, plasma::Node*>::Node* node = game->gui.icon_node_map.head->parent;
 
 		while (node->isnil == 0)
 		{
