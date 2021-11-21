@@ -2,6 +2,8 @@
 #include <string>
 #include "cwsdk.h"
 
+plasma::TextShape* shape;
+
 void Stub(cube::Game* game)
 {
 	wchar_t buff[250];
@@ -31,6 +33,29 @@ void Stub(cube::Game* game)
 			node = node->right;
 		}
 	}
+
+	shape = game->plasma_engine->CreateTextShape();
+
+	shape->colors.data[shape->colors.current_frame] = FloatRGBA(1, 1, 1, 1);
+	shape->strokeColors.data[shape->strokeColors.current_frame] = FloatRGBA(0, 0, 0, 1);
+	shape->extrusionColors.data[shape->extrusionColors.current_frame] = FloatRGBA(0, 0, 0, 1);
+
+	shape->text_size = 100.0f;
+	shape->stroke_size = 2.0f;
+	shape->horizontal_spacing = 3.0f;
+	shape->vertical_spacing = 3.0f;
+
+	shape->string.data[shape->string.current_frame] = L"Wollayy!!!\n Newline?? :D";
+
+	shape->font_file_name = L"resource1.dat";
+
+	shape->int_2F8 = 1;
+
+	shape->Load(true);
+
+	std::wstring name(L"RandomText");
+	plasma::Node* node = game->plasma_engine->CreateNode(nullptr, shape, nullptr, game->plasma_engine->root_node, &name);
+	node->Translate(game->width / 2, game->height / 2, 0, 0);
 }
 
 // Todo: Remove from callback
@@ -76,6 +101,17 @@ extern "C" void GameTickHandler(cube::Game* game) {
 		Stub(game);
 		//DrawPLXOnScreen(game);
 	}
+
+	// Constantly flickering text
+	/*
+	std::wstring name(L"RandomText");
+	plasma::Node* node = game->plasma_engine->root_node->FindChildByName(&name);
+	node->SetVisibility(!node->IsVisible());
+	*/
+	std::wstring name(L"RandomText");
+	plasma::Node* node = game->plasma_engine->root_node->FindChildByName(&name);
+	node->Translate(0, 0, game->width / 2, game->height / 2);
+
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnGameTickPriority == (GenericMod::Priority)priority) {

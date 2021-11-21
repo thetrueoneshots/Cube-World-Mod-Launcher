@@ -137,12 +137,12 @@ extern "C" void cube__GUI__Load(cube::GUI * gui, void* db)
 	// White
 	text_shape->colors.data[text_shape->colors.current_frame] = FloatRGBA(1);
 	// Set string size to 12?
-	text_shape->size_maybe = 12.0f;
+	text_shape->text_size = 12.0f;
 	// Black
 	text_shape->strokeColors.data[text_shape->strokeColors.current_frame] = FloatRGBA(0, 0, 0, 1);
 	// Set stroke size to 3?
-	text_shape->some_other_size_maybe = 3.0f;
-	text_shape->float_2C4 = 3.0f;
+	text_shape->stroke_size = 3.0f;
+	text_shape->vertical_spacing = 3.0f;
 	text_shape->string.data[text_shape->string.current_frame] = L"Please wait...";
 	text_shape->font_file_name = L"resource1.dat";
 	text_shape->int_2F8 = 1;
