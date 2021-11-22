@@ -46,7 +46,7 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 	// Draw modded text
 	widget->SetTextSize(200.0f);
 	widget->SetBorderSize(18.0f);
-	widget->SetTextPivot(cube::TextPivot::Center);
+	widget->SetTextPivot(plasma::TextPivot::Center);
 	widget->SetBorderColor(&border_color);
 	widget->SetTextColor(&modded_color);
 	widget->DrawText(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
@@ -131,7 +131,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 
 	widget->SetTextSize(text_size);
 	widget->SetBorderSize(border_size);
-	widget->SetTextPivot(cube::TextPivot::Center);
+	widget->SetTextPivot(plasma::TextPivot::Center);
 	widget->SetBorderColor(&border_color);
 	widget->hover_state = cube::StartMenuWidget::HoverState::None;
 
@@ -168,7 +168,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	}
 
 	widget->SetScalableFont(&font1);
-	widget->SetTextPivot(cube::TextPivot::Left);
+	widget->SetTextPivot(plasma::TextPivot::Left);
 	widget->SetTextSize(12.0f);
 	widget->SetBorderSize(3.0f);
 	widget->SetTextColor(&text_color);
@@ -225,7 +225,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	};
 	widget->SetScalableFont(&font1);
 	widget->SetTextSize(12.0f);
-	widget->SetTextPivot(cube::TextPivot::Right);
+	widget->SetTextPivot(plasma::TextPivot::Right);
 
 	for (int i = 0; i < 2; i++)
 	{

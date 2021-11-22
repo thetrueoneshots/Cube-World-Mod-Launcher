@@ -145,11 +145,93 @@ extern "C" void cube__GUI__Load(cube::GUI * gui, void* db)
 	text_shape->vertical_spacing = 3.0f;
 	text_shape->string.data[text_shape->string.current_frame] = L"Please wait...";
 	text_shape->font_file_name = L"resource1.dat";
-	text_shape->int_2F8 = 1;
+	text_shape->text_pivot = 1;
 
 	std::wstring wstr_wait = L"wait";
 	gui->wait_node = plasma_engine->CreateNode(nullptr, text_shape, nullptr, root_node, &wstr_wait);
 
+	gui->plasma_node_21 = plasma_engine->CreateNode(gui->interface_elements_node, &wstr_empty);
+	std::wstring wstr_combopoints = L"combopoints";
+	gui->combopoints_node = plx_node->FindChildByName(&wstr_combopoints);
+	gui->combopoints_node->SetParent(gui->interface_elements_node);
+	
+	std::wstring wstr_enemy = L"enemy";
+	std::wstring wstr_monster = L"monster";
+	std::wstring wstr_crystal = L"crystal";
+	std::wstring wstr_brazier = L"brazier"; 
+	std::wstring wstr_manapump = L"manapump";
+	std::wstring wstr_npc = L"npc";
+	std::wstring wstr_static = L"static";
+	std::wstring wstr_object = L"object";
+	std::wstring wstr_star = L"star";
+	std::wstring wstr_cross = L"cross";
+	std::wstring wstr_flightpoint = L"flight-point";
+	std::wstring wstr_unkflightpoint = L"unknown-flight-point";
+	std::wstring wstr_home = L"home";
+	std::wstring wstr_mapposition = L"mapposition";
+	std::wstring wstr_direction = L"direction";
+	std::wstring wstr_armor_shop = L"armor-shop";
+	std::wstring wstr_weapon_shop = L"weapon-shop";
+	std::wstring wstr_item_shop = L"item-shop";
+	std::wstring wstr_identifier = L"identifier";
+	std::wstring wstr_smithy = L"smithy";
+	std::wstring wstr_carpenters_shop = L"carpenters-shop";
+	std::wstring wstr_tailors_shop = L"tailors-shop";
+	std::wstring wstr_inn = L"inn";
+	std::wstring wstr_shrine = L"shrine";
+	std::wstring wstr_spirit = L"spirit";
+	std::wstring wstr_bell = L"bell";
+
+	std::wstring wstr_harp = L"harp";
+	std::wstring wstr_whistle = L"whistle";
+	std::wstring wstr_solved = L"solved";
+	std::wstring wstr_gnome = L"gnome";
+	std::wstring wstr_hangglider = L"hangglider";
+	std::wstring wstr_boat = L"boat";
+	std::wstring wstr_climbingspikes = L"climbingspikes";
+	std::wstring wstr_reins = L"reins";
+	std::wstring wstr_destination = L"destination";
+	std::wstring wstr_crafting1 = L"crafting1";
+
+	gui->enemy_node = plx_node->FindChildByName(&wstr_enemy);
+	gui->monster_node = plx_node->FindChildByName(&wstr_monster);
+	gui->crystal_node = plx_node->FindChildByName(&wstr_crystal);
+	gui->brazier_node = plx_node->FindChildByName(&wstr_brazier);
+	gui->brazier_node = plx_node->FindChildByName(&wstr_manapump);
+	gui->npc_node = plx_node->FindChildByName(&wstr_npc);
+	gui->static_node = plx_node->FindChildByName(&wstr_static);
+	gui->object_node = plx_node->FindChildByName(&wstr_object); 
+	gui->star_node = plx_node->FindChildByName(&wstr_star);
+	gui->cross_node = plx_node->FindChildByName(&wstr_cross);
+	gui->flight_point_node = plx_node->FindChildByName(&wstr_flightpoint);
+	gui->unknown_flight_point_node = plx_node->FindChildByName(&wstr_unkflightpoint);
+	gui->home_node = plx_node->FindChildByName(&wstr_home);
+	gui->mapposition_node = plx_node->FindChildByName(&wstr_mapposition);
+	gui->direction_node = plx_node->FindChildByName(&wstr_direction);
+	gui->armor_shop_node = plx_node->FindChildByName(&wstr_armor_shop);
+	gui->weapon_shop_node = plx_node->FindChildByName(&wstr_weapon_shop);
+	gui->item_shop_node = plx_node->FindChildByName(&wstr_item_shop);
+	gui->identifier_node = plx_node->FindChildByName(&wstr_identifier);
+	gui->smithy_node = plx_node->FindChildByName(&wstr_smithy);
+	gui->carpenters_shop_node = plx_node->FindChildByName(&wstr_carpenters_shop);
+	gui->tailors_shop_node = plx_node->FindChildByName(&wstr_tailors_shop);
+	gui->inn_node = plx_node->FindChildByName(&wstr_inn);
+	gui->shrine_node = plx_node->FindChildByName(&wstr_shrine);
+	gui->spirit_node = plx_node->FindChildByName(&wstr_spirit);
+	gui->bell_node = plx_node->FindChildByName(&wstr_bell);
+
+	gui->harp_node = plx_node->FindChildByName(&wstr_harp);
+	gui->whistle_node = plx_node->FindChildByName(&wstr_whistle);
+	gui->solved_node = plx_node->FindChildByName(&wstr_solved);
+	gui->gnome_node = plx_node->FindChildByName(&wstr_gnome);
+	gui->hangglider_node = plx_node->FindChildByName(&wstr_hangglider);
+	gui->boat_node = plx_node->FindChildByName(&wstr_boat);
+	gui->climbingspikes_node = plx_node->FindChildByName(&wstr_climbingspikes);
+	gui->reins_node = plx_node->FindChildByName(&wstr_reins);
+	gui->destination_node = plx_node->FindChildByName(&wstr_destination);
+	gui->crafting1_node = plx_node->FindChildByName(&wstr_crafting1);
+
+	// loc_FC16E
 	return;
 }
 
