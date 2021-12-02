@@ -52,36 +52,15 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 	widget->DrawString(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
 }
 
-/* Not called, but an idea (not working) of how to add new widgets*/
-/*void TestCode(cube::StartMenuWidget* widget, bool active)
+extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 {
-	return;
-	static std::wstring* name = new std::wstring(L"ModWidget");
-	static plasma::Node* background = widget->game->gui.blackwidget_node_0->CreateCopy(widget->d3d11_engine->root_node);
-	static cube::ModWidget* mod_widget = (cube::ModWidget*)new char[sizeof(cube::ModWidget)];//new cube::ModWidget(widget->game, widget->d3d11_engine, background, name);
-	static bool init = false;
-
-	if (!background)
+	std::wstring wstr_mod_node(L"mod-node");
+	plasma::Node* node = widget->game->plasma_engine->root_node->FindChildByName(&wstr_mod_node);
+	if (node != nullptr && node->IsVisible())
 	{
 		return;
 	}
 
-	if (!init)
-	{
-		mod_widget->ctor(widget->d3d11_engine, background, name);
-		mod_widget->game = widget->game;
-	}
-
-	background->display->SetVisibility(background->display->visibility.current_frame, active ? 1 : 0);
-}*/
-
-// Todo: Game version
-// Todo: Picroma credits
-// Todo: Show modloader version
-// Todo: Render credits chris & me
-// Todo: Link to bagel his youtube?
-extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
-{
 	const static float text_size = 36.0f; // Original	18.0f
 	const static float border_size = 4.0f; // Original	4.0f
 	const int num_btns = 4;

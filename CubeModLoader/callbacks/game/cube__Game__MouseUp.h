@@ -1,8 +1,31 @@
 #pragma once
 #include "../../CWSDK/cwsdk.h"
+#include "../ModWidget.h"
 
 extern "C" void cube__Game__MouseUp(cube::Game* game, cube::MouseButton mouse_button)
 {
+	std::wstring wstr_mod_node(L"mod-node");
+	plasma::Node* node = game->plasma_engine->root_node->FindChildByName(&wstr_mod_node);
+	if (node != nullptr && node->IsVisible() && mouse_button == cube::MouseButton::LeftMouseButton)
+	{
+		mod::ModWidget* widget = (mod::ModWidget*)node->widget1;
+		switch (widget->hover_state)
+		{
+		case 1:
+			// Load mods
+			node->SetVisibility(false);
+			break;
+		case 2:
+			// Do Not load mods
+			node->SetVisibility(false);
+			break;
+		default:
+
+			break;
+		}
+		return;
+	}
+
 	if (game->gui.startmenu_node->display->IsVisible() && game->gui.startmenu_buttons_node->display->IsVisible())
 	{
 		if (mouse_button == cube::MouseButton::LeftMouseButton)

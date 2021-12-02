@@ -24,11 +24,17 @@ mod::ModWidget* mod::ModWidget::ctor(cube::Game* game, plasma::Node* node)
 	return this;
 }
 
+bool BtnIsHovered(FloatVector2* mouse_pos, float min_x, float max_x, int height)
+{
+	if (mouse_pos->x < min_x || max_x <= mouse_pos->x || mouse_pos->y < height - 20 || height + 10 <= mouse_pos->y)
+	{
+		return false;
+	}
+	return true;
+}
+
 void mod::ModWidget::Draw(ModWidget* widget)
 {
-	// Translate to center
-	widget->node->Translate(widget->game->width / 2, widget->game->height / 2, -150, -175);
-
 	const static float text_size = 18.0f; // Original	18.0f
 	const static float border_size = 4.0f; // Original	4.0f
 
@@ -37,19 +43,46 @@ void mod::ModWidget::Draw(ModWidget* widget)
 	FloatRGBA disabled_color(1.0f, 1.0f, 1.0f, 0.2f);
 	FloatRGBA border_color(0.0f, 0.0f, 0.0f, 1.0f);
 
+	FloatVector2 mouse_pos;
 	FloatVector2 pos(0, 0);
+
 	std::wstring title(L"Do you want to run with mods?");
 	std::wstring wstr_yes(L"Yes");
 	std::wstring wstr_no(L"No");
+
+	// Translate to center
+	widget->node->Translate(widget->game->width / 2, widget->game->height / 2, -150, -175);
+
+	// Get mouse
+	mouse_pos = *widget->GetRelativeMousePosition(&mouse_pos);
+
+	// Set hover to 0
+	widget->hover_state = 0;
+
+	// Text settings
 	widget->SetTextSize(text_size);
+	widget->SetTextColor(&text_color);
 	widget->SetBorderSize(border_size);
-	widget->SetTextPivot(plasma::TextPivot::Center);
 	widget->SetBorderColor(&border_color);
+	widget->SetTextPivot(plasma::TextPivot::Center);
 	widget->DrawString(&pos, &title, widget->GetXSize() / 2 + 100, 150);
 
-	widget->SetTextColor(&hover_color);
-	widget->DrawString(&pos, &wstr_yes, widget->GetXSize() / 2 + 50, 200);
+	// Draw yes option
 	widget->SetTextColor(&text_color);
+	if (BtnIsHovered(&mouse_pos, 0, widget->GetXSize() / 2 + 100, 200))
+	{
+		widget->SetTextColor(&hover_color);
+		widget->hover_state = 1;
+	}
+	widget->DrawString(&pos, &wstr_yes, widget->GetXSize() / 2 + 50, 200);
+	
+	// Draw no option
+	widget->SetTextColor(&text_color);
+	if (BtnIsHovered(&mouse_pos, widget->GetXSize() / 2 + 100, widget->GetXSize() + 200, 200))
+	{
+		widget->SetTextColor(&hover_color);
+		widget->hover_state = 2;
+	}
 	widget->DrawString(&pos, &wstr_no, widget->GetXSize() / 2 + 150, 200);
 }
 
