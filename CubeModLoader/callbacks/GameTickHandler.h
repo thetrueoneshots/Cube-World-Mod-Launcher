@@ -12,18 +12,16 @@ void InitUI(cube::Game* game)
 
 	// Create node to add to the engine root node (automatically gets drawn)
 	plasma::Node* node = game->plasma_engine->CreateNode(game->plasma_engine->root_node, &name);
-	node->text_shape = game->gui.start_menu_widget->node->text_shape;
-	// Translate the node to the center
-	node->Translate(game->width / 2, game->height / 2, -size.x / 2 + 100, -size.y / 2 - 100);
 	
 	// Create a deep copy of the blackwidget (background node)
 	plasma::Node* background = game->gui.blackwidget_node_0->CreateDeepCopy(node);
 	background->widget1->SetSize(&size);
 	background->widget1->field_1A0 = 0;
 
-
 	mod::ModWidget::Init();
 	mod::ModWidget* widget = (mod::ModWidget*)new char[sizeof(mod::ModWidget)];
+
+	// Create a widget and add it to the node specified.
 	widget->ctor(game, node);
 }
 
