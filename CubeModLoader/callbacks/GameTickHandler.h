@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include "cwsdk.h"
+#include "../ModWidget.h"
 
 //plasma::TextShape* shape;
 
@@ -168,22 +169,137 @@ void DrawPLXOnScreen(cube::Game* game)
 	//blackwidget->Translate(0, 0, game->width / 2, game->height / 2);
 }
 
+void DrawModWidget(cube::BaseWidget* widget)
+{
+	const static float text_size = 18.0f; // Original	18.0f
+	const static float border_size = 4.0f; // Original	4.0f
+
+	FloatRGBA text_color(1.0f, 1.0f, 1.0f, 1.0f);
+	FloatRGBA hover_color(0.2f, 1.0f, 1.0f, 1.0f);
+	FloatRGBA disabled_color(1.0f, 1.0f, 1.0f, 0.2f);
+	FloatRGBA border_color(0.0f, 0.0f, 0.0f, 1.0f);
+
+	FloatVector2 pos(0, 0);
+	std::wstring title(L"Do you want to run with mods?");
+	std::wstring wstr_yes(L"Yes");
+	std::wstring wstr_no(L"No");
+	widget->SetTextSize(text_size);
+	widget->SetBorderSize(border_size);
+	widget->SetTextPivot(plasma::TextPivot::Center);
+	widget->SetBorderColor(&border_color);
+	widget->DrawString(&pos, &title, widget->GetXSize() / 2 + 100, 150);
+
+	widget->SetTextColor(&hover_color);
+	widget->DrawString(&pos, &wstr_yes, widget->GetXSize() / 2 + 50, 200);
+	widget->SetTextColor(&text_color);
+	widget->DrawString(&pos, &wstr_no, widget->GetXSize() / 2 + 150, 200);
+	return;
+}
+
+//void* VTABLE[43];
+
 void RenderGUI(cube::Game* game)
 {
+	/*void* NULLSUB = CWOffset(0xE8A20);
+	void* RETZERO = CWOffset(0x368230);
+
+	void *vtab[43] = {
+	CWOffset(0x268B40),
+	&DrawModWidget,				// void Draw(plasma::Widget*)
+	CWOffset(0x26A720),
+	CWOffset(0x26A720),
+	RETZERO,
+	RETZERO,
+	NULLSUB,
+	CWOffset(0x32B830),
+	CWOffset(0x32BFD0),
+	CWOffset(0x32BD70),
+	NULLSUB,
+	CWOffset(0x32B990),
+	CWOffset(0x32BB40),
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	CWOffset(0x32BB80),		// void OnMouseOver(plasma::Widget*)
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	NULLSUB,
+	CWOffset(0x32B5A0),
+	CWOffset(0x32B6B0),
+	NULLSUB,
+	NULLSUB,
+	CWOffset(0x32B6E0),
+	CWOffset(0x32A2C0),		// plasma::Widget* CreateCopy(plasma::Widget*);
+	CWOffset(0x32A8D0),
+	NULLSUB
+	};
+
+	for (int i = 0; i < 43; ++i)
+	{
+		VTABLE[i] = vtab[i];
+	}
+	*/
+
 	// Variables
-	FloatVector2 size(500, 500);
+	FloatVector2 size(500, 150);
 	std::wstring name(L"mod-node");
+	std::wstring w_name(L"mod-widget");
 
 	// Create node to add to the engine root node (automatically gets drawn)
 	plasma::Node* node = game->plasma_engine->CreateNode(game->plasma_engine->root_node, &name);
+	node->text_shape = game->gui.start_menu_widget->node->text_shape;
 	// Create a deep copy of the blackwidget (background node)
 	plasma::Node* background = game->gui.blackwidget_node_0->CreateDeepCopy(node);
 
 	// Translate the node to the center
-	background->Translate(game->width / 2, game->height / 2, -size.x / 2, -size.y / 2);
+	node->Translate(game->width / 2, game->height / 2, -size.x / 2 + 100, -size.y / 2 - 100);
+	//background->Translate(game->width / 2, game->height / 2, -size.x / 2, -size.y / 2);
 
 	// Set node (indirectly) size
-	background->widget1->SetSize(&size);
+	
+	if (background->widget1 != nullptr)
+	{
+		background->widget1->SetSize(&size);
+		background->widget1->field_1A0 = 0;
+	}
+	else
+	{
+		background->transformation->local_transformation.scale(2.0f, 1.0f, 1.0f);//SetSize(&size, true);
+	}
+
+
+	mod::ModWidget::Init();
+	mod::ModWidget* widget = (mod::ModWidget*)new char[sizeof(mod::ModWidget)];
+	widget->ctor(game, node);
+
+	//cube::BaseWidget* basewidget = (cube::BaseWidget*)new char[sizeof(cube::BaseWidget)];
+	/*basewidget = basewidget->ctor(game->plasma_engine, node, &w_name);
+
+	std::wstring fontName(L"resource1.dat");
+	basewidget->SetScalableFont(&fontName);
+	basewidget->Translate(100, 200, 1);
+	
+	// Manually set vtable
+	size_t* vptr = (size_t*)basewidget;
+	*vptr = (size_t)VTABLE; //(size_t)CWOffset(0x46CED8);
+	*/
+
+	//game->PrintMessage(node->widget1->name.c_str());
 }
 
 extern "C" void GameTickHandler(cube::Game* game) {

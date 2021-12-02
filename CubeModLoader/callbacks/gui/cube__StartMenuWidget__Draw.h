@@ -49,7 +49,7 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 	widget->SetTextPivot(plasma::TextPivot::Center);
 	widget->SetBorderColor(&border_color);
 	widget->SetTextColor(&modded_color);
-	widget->DrawText(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
+	widget->DrawString(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
 }
 
 /* Not called, but an idea (not working) of how to add new widgets*/
@@ -164,7 +164,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 			}
 		}
 
-		widget->DrawText(&pos, &btn_txt[i], 0.5 * width, btn_y);
+		widget->DrawString(&pos, &btn_txt[i], 0.5 * width, btn_y);
 	}
 
 	widget->SetScalableFont(&font1);
@@ -213,7 +213,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	int offset = 20;
 	for (int i = 0; i < 3; i++)
 	{
-		widget->DrawText(&pos, &credits[i], f7 + (width - widget->game->width) / 2, f6 - i * offset);
+		widget->DrawString(&pos, &credits[i], f7 + (width - widget->game->width) / 2, f6 - i * offset);
 		widget->SetScalableFont(&font2);
 		widget->SetTextSize(20.0f);
 		offset = 25;
@@ -229,7 +229,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 
 	for (int i = 0; i < 2; i++)
 	{
-		widget->DrawText(&pos, &versions[i], -f7 + (width + widget->game->width) / 2, f6 - i * 20);
+		widget->DrawString(&pos, &versions[i], -f7 + (width + widget->game->width) / 2, f6 - i * 20);
 	}
 	
 };
