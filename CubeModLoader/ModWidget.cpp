@@ -8,6 +8,11 @@ mod::ModWidget* mod::ModWidget::ctor(cube::Game* game, plasma::Node* node)
 	std::wstring wstr_empty(L"");
 	((cube::BaseWidget*)this)->ctor(game->plasma_engine, node, &wstr_empty);
 
+	// Set fields
+	this->game = game;
+	this->hover_state = 0;
+
+	// Set scalable font
 	std::wstring fontName(L"resource1.dat");
 	this->SetScalableFont(&fontName);
 	this->Translate(100, 200, 1);
@@ -21,6 +26,9 @@ mod::ModWidget* mod::ModWidget::ctor(cube::Game* game, plasma::Node* node)
 
 void mod::ModWidget::Draw(ModWidget* widget)
 {
+	// Translate to center
+	widget->node->Translate(widget->game->width / 2, widget->game->height / 2, -150, -175);
+
 	const static float text_size = 18.0f; // Original	18.0f
 	const static float border_size = 4.0f; // Original	4.0f
 

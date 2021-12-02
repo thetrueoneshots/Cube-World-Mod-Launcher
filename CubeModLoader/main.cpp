@@ -122,7 +122,7 @@ extern "C" void StartMods() {
         } while (FindNextFile(hFind, &data));
         FindClose(hFind);
     }
-
+    
     // Find all the functions the mods may export
     for (DLL* dll: modDLLs) {
         MUST_IMPORT(dll, ModMajorVersion);
