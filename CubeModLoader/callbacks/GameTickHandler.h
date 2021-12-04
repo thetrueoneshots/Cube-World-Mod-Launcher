@@ -33,9 +33,14 @@ extern "C" void GameTickHandler(cube::Game* game) {
 
 		InitUI(game);
 
-		// Reload cursor node to draw over newly created UI
-		// Todo: Cleanup old allocated memory
-		game->gui.cursor_node = game->gui.cursor_node->CreateDeepCopy(game->plasma_engine->root_node);
+		// Create deep copy of the cursor node
+		plasma::Node* node = game->gui.cursor_node->CreateDeepCopy(game->plasma_engine->root_node);
+
+		// Hide the old cursor node
+		game->gui.cursor_node->SetVisibility(false);
+
+		// Set the new cursor node
+		game->gui.cursor_node = node;
 	}
 
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {

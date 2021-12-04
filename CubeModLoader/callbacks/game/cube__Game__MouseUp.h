@@ -13,10 +13,12 @@ extern "C" void cube__Game__MouseUp(cube::Game* game, cube::MouseButton mouse_bu
 		{
 		case 1:
 			// Load mods
+			game->PrintMessage(L"Load mods!");
 			node->SetVisibility(false);
 			break;
 		case 2:
 			// Do Not load mods
+			game->PrintMessage(L"Did not load mods...");
 			node->SetVisibility(false);
 			break;
 		default:
