@@ -3,26 +3,28 @@
 #include "cwsdk.h"
 #include "../ModWidget.h"
 
-void InitUI(cube::Game* game)
+plasma::Node* CreateModWidgetGUI(cube::Game* game)
 {
 	// Variables
-	FloatVector2 size(500, 150);
-	std::wstring name(L"mod-node");
-	std::wstring w_name(L"mod-widget");
+	FloatVector2 size(game->width, game->height);
+	std::wstring wstr_node_name(L"mod-node");
 
 	// Create node to add to the engine root node (automatically gets drawn)
-	plasma::Node* node = game->plasma_engine->CreateNode(game->plasma_engine->root_node, &name);
+	plasma::Node* node = game->plasma_engine->CreateNode(game->plasma_engine->root_node, &wstr_node_name);
 	
 	// Create a deep copy of the blackwidget (background node)
 	plasma::Node* background = game->gui.blackwidget_node_0->CreateDeepCopy(node);
 	background->widget1->SetSize(&size);
-	background->widget1->field_1A0 = 0;
+	background->Translate(0, 0, 0, 0);
+	//background->widget1->field_1A0 = 0;
 
 	mod::ModWidget::Init();
 	mod::ModWidget* widget = (mod::ModWidget*)new char[sizeof(mod::ModWidget)];
 
 	// Create a widget and add it to the node specified.
-	widget->ctor(game, node);
+	widget->ctor(game, node, background, &allDlls);
+
+	return node;
 }
 
 extern "C" void GameTickHandler(cube::Game* game) {
@@ -31,7 +33,7 @@ extern "C" void GameTickHandler(cube::Game* game) {
 	{
 		init = true;
 
-		InitUI(game);
+		CreateModWidgetGUI(game);
 
 		// Create deep copy of the cursor node
 		plasma::Node* node = game->gui.cursor_node->CreateDeepCopy(game->plasma_engine->root_node);

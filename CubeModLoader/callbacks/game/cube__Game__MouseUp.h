@@ -6,25 +6,10 @@ extern "C" void cube__Game__MouseUp(cube::Game* game, cube::MouseButton mouse_bu
 {
 	std::wstring wstr_mod_node(L"mod-node");
 	plasma::Node* node = game->plasma_engine->root_node->FindChildByName(&wstr_mod_node);
-	if (node != nullptr && node->IsVisible() && mouse_button == cube::MouseButton::LeftMouseButton)
+	if (node != nullptr && node->IsVisible())
 	{
 		mod::ModWidget* widget = (mod::ModWidget*)node->widget1;
-		switch (widget->hover_state)
-		{
-		case 1:
-			// Load mods
-			game->PrintMessage(L"Load mods!");
-			node->SetVisibility(false);
-			break;
-		case 2:
-			// Do Not load mods
-			game->PrintMessage(L"Did not load mods...");
-			node->SetVisibility(false);
-			break;
-		default:
-
-			break;
-		}
+		widget->MouseUp(mouse_button);
 		return;
 	}
 

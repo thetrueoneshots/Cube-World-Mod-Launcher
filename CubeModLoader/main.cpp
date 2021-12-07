@@ -24,7 +24,8 @@
 using namespace std;
 
 GLOBAL void* base; // Module base
-GLOBAL vector <DLL*> modDLLs; // Every mod we've loaded
+GLOBAL vector <DLL*> modDLLs; // Enabled mods loaded
+GLOBAL vector <DLL*> allDlls; // All available mods
 GLOBAL vector <DLL*> legacyDLLs; // cwmods
 GLOBAL HMODULE hSelf; // A handle to ourself, to prevent being unloaded
 GLOBAL void** initterm_eReference; // A pointer-pointer to a function which is run extremely soon after starting, or after being unpacked
@@ -153,8 +154,18 @@ extern "C" void StartMods() {
 			Popup("Error", msg);
 			exit(1);
 		}
-		
 	}
+
+    mod::ModWidget::LoadSave(&modDLLs);
+    allDlls = std::vector<DLL*>(modDLLs.begin(), modDLLs.end());
+    for (int i = 0; i < modDLLs.size(); i++)
+    {
+        if (!modDLLs.at(i)->enabled)
+        {
+            modDLLs.erase(modDLLs.begin() + i);
+            i--;
+        }
+    }
 
     // Run Initialization routines on all mods
     for (DLL* dll: modDLLs) {
