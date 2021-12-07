@@ -19,6 +19,7 @@ namespace mod {
 		int hover_state;
 		int selected;
 		int page;
+		bool changed;
 		plasma::Node* background;
 		std::vector<DLL*>* mods;
 		void* artificial_vtable[43];

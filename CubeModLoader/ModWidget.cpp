@@ -1,6 +1,7 @@
 #include "ModWidget.h"
 #include <iostream>
 #include <fstream>
+#include <process.h>
 
 static std::string file_name = "mods-settings.cwb";
 void* VTABLE[43];
@@ -17,6 +18,7 @@ mod::ModWidget* mod::ModWidget::ctor(cube::Game* game, plasma::Node* node, plasm
 	this->background = background;
 	this->mods = mods;
 	this->page = 0;
+	this->changed = false;
 
 	// Set scalable font
 	std::wstring fontName(L"resource1.dat");
@@ -46,6 +48,11 @@ void mod::ModWidget::MouseUp(cube::MouseButton mouse_button)
 	{
 	case HoverState::Exit:
 		this->node->SetVisibility(false);
+		if (this->changed)
+		{
+			char* argument_list[] = { "cubeworld.exe", NULL };
+			_execvp("cubeworld.exe", argument_list);
+		}
 		break;
 	case HoverState::Toggle:
 		if (this->selected < 0 || this->selected >= this->mods->size())
@@ -54,6 +61,7 @@ void mod::ModWidget::MouseUp(cube::MouseButton mouse_button)
 		}
 		this->mods->at(this->selected)->enabled = !this->mods->at(this->selected)->enabled;
 		ModWidget::StoreSave(this->mods);
+		this->changed = true;
 		break;
 	case HoverState::Next:
 		if (this->NextPageAvailable())
@@ -111,7 +119,7 @@ void mod::ModWidget::Draw(ModWidget* widget)
 	FloatVector2 size(500, 500);
 
 	std::wstring wstr_title(L"Mods");
-	std::wstring wstr_reminder(L"Don't forget to restart after \n changing the mods!");
+	std::wstring wstr_reminder(L"If you change something \n the game restarts to \n reload all the mods!");
 	std::wstring wstr_next(L">");
 	std::wstring wstr_prev(L"<");
 	std::wstring wstr_x(L"X");
