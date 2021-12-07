@@ -18,6 +18,7 @@ namespace mod {
 		cube::Game* game;
 		int hover_state;
 		int selected;
+		int page;
 		plasma::Node* background;
 		std::vector<DLL*>* mods;
 		void* artificial_vtable[43];
@@ -26,6 +27,8 @@ namespace mod {
 		ModWidget* ctor(cube::Game* game, plasma::Node* node, plasma::Node* background, std::vector<DLL*>* mods);
 
 		void MouseUp(cube::MouseButton mouse_button);
+		bool NextPageAvailable();
+		bool PreviousPageAvailable();
 
 		static void Draw(ModWidget* widget);
 		static void Init();

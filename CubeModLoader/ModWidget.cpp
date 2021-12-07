@@ -16,6 +16,7 @@ mod::ModWidget* mod::ModWidget::ctor(cube::Game* game, plasma::Node* node, plasm
 	this->hover_state = 0;
 	this->background = background;
 	this->mods = mods;
+	this->page = 0;
 
 	// Set scalable font
 	std::wstring fontName(L"resource1.dat");
@@ -52,11 +53,34 @@ void mod::ModWidget::MouseUp(cube::MouseButton mouse_button)
 			return;
 		}
 		this->mods->at(this->selected)->enabled = !this->mods->at(this->selected)->enabled;
+		ModWidget::StoreSave(this->mods);
+		break;
+	case HoverState::Next:
+		if (this->NextPageAvailable())
+		{
+			this->page++;
+		}
+		break;
+	case HoverState::Previous:
+		if (this->PreviousPageAvailable())
+		{
+			this->page--;
+		}
 		break;
 	default:
 
 		break;
 	}
+}
+
+bool mod::ModWidget::NextPageAvailable()
+{
+	return (this->page + 1) * 7 < this->mods->size();
+}
+
+bool mod::ModWidget::PreviousPageAvailable()
+{
+	return this->page > 0;
 }
 
 bool BtnIsHovered(FloatVector2* mouse_pos, float min_x, float max_x, int height)
@@ -72,21 +96,24 @@ void mod::ModWidget::Draw(ModWidget* widget)
 {
 	const static float text_size = 18.0f; // Original	18.0f
 	const static float border_size = 4.0f; // Original	4.0f
+	const static float title_size = 25.0f;
 
 	cube::Game* game = widget->game;
 
 	FloatRGBA text_color(1.0f, 1.0f, 1.0f, 1.0f);
 	FloatRGBA hover_color(0.2f, 1.0f, 1.0f, 1.0f);
+	FloatRGBA warn_color(1.0f, 0.65f, 0.0f, 1.0f);
 	FloatRGBA disabled_color(1.0f, 1.0f, 1.0f, 0.2f);
 	FloatRGBA border_color(0.0f, 0.0f, 0.0f, 1.0f);
 
 	FloatVector2 mouse_pos;
 	FloatVector2 pos(0, 0);
-	FloatVector2 size(game->width-100, game->height-100);
+	FloatVector2 size(500, 500);
 
-	std::wstring title(L"Mods");
-	std::wstring wstr_enable(L"Enable");
-	std::wstring wstr_disable(L"Disable");
+	std::wstring wstr_title(L"Mods");
+	std::wstring wstr_reminder(L"Don't forget to restart after \n changing the mods!");
+	std::wstring wstr_next(L">");
+	std::wstring wstr_prev(L"<");
 	std::wstring wstr_x(L"X");
 
 	// Translate background and node
@@ -111,78 +138,91 @@ void mod::ModWidget::Draw(ModWidget* widget)
 	widget->SetTextPivot(plasma::TextPivot::Center);
 
 	// Draw title
-	widget->DrawString(&pos, &title, game->width / 2 - 50, 10 + text_size);
+	widget->SetTextSize(title_size);
+	widget->DrawString(&pos, &wstr_title, size.x/2, 20 + text_size);
 
 	// Draw x to exit
 	widget->SetTextPivot(plasma::TextPivot::Right);
-	if (BtnIsHovered(&mouse_pos, game->width - 130, game->width - 110, 10 + text_size))
+	if (BtnIsHovered(&mouse_pos, size.x - 30, size.x - 10, 20 + text_size))
 	{
 		widget->SetTextColor(&hover_color);
 		widget->hover_state = ModWidget::HoverState::Exit;
 	}
-	widget->DrawString(&pos, &wstr_x, game->width - 110, 10 + text_size);
+	widget->DrawString(&pos, &wstr_x, size.x - 10, 20 + text_size);
 
-	// Draw horizontal line
+	// Draw reminder
+	widget->SetTextColor(&warn_color);
+	widget->SetTextSize(text_size - 5);
 	widget->SetTextPivot(plasma::TextPivot::Center);
-	widget->SetTextColor(&text_color);
-	std::wstring line;
-	for (int i = 0; i < game->width / (text_size - 2); i++)
-	{
-		line.append(L"_");
-	}
-	widget->DrawString(&pos, &line, game->width / 2 - 50, 2 * (10 + text_size));
-
-	// Draw vertical line
-	line.clear();
-	for (int i = 0; i < (game->height - 100) / text_size - 5; i++)
-	{
-		line.append(L"|\n");
-	}
-	widget->DrawString(&pos, &line, game->width / 2 - 50, 3 * (10 + text_size));
+	widget->DrawString(&pos, &wstr_reminder, size.x / 2, 2 * (10 + text_size));
 
 	// Draw mods
-	
-
 	int y_count = 0;
-	int x_count = 0;
-	int index = 0;
 
-	for (DLL* dll : *widget->mods)
+	for (int i = widget->page * 7; i < (widget->page + 1)*7 && i < widget->mods->size(); i++)
 	{
+		DLL* dll = widget->mods->at(i);
 		widget->SetTextPivot(plasma::TextPivot::Left);
 		widget->SetTextColor(&text_color);
 		if (!dll->enabled)
 		{
 			widget->SetTextColor(&disabled_color);
 		}
+
 		int y_pos = (4 + 2 * y_count) * (10 + text_size);
-		std::wstring name = L"- " + std::wstring(dll->fileName.begin(), dll->fileName.end());
-		widget->DrawString(&pos, &name, 50, y_pos);
-
-
-		widget->SetTextPivot(plasma::TextPivot::Right);
-		widget->SetTextColor(&text_color);
-
-		if (BtnIsHovered(&mouse_pos, game->width / 2 - 50 - text_size * wstr_disable.size(), game->width / 2 - 50 - text_size, y_pos))
+		if (BtnIsHovered(&mouse_pos, 0, size.x, y_pos))
 		{
 			widget->SetTextColor(&hover_color);
 			widget->hover_state = HoverState::Toggle;
-			widget->selected = index;
+			widget->selected = i;
 		}
-		if (!dll->enabled)
+		std::wstring name = L"- " + std::wstring(dll->fileName.begin() + 5, dll->fileName.end());
+		if (name.size() > 45)
 		{
-			widget->DrawString(&pos, &wstr_enable, game->width/2 - 50 - text_size, y_pos);
-		} 
-		else
-		{
-			widget->DrawString(&pos, &wstr_disable, game->width / 2 - 50 - text_size, y_pos);
+			name = name.substr(0, 42) + L"...";
 		}
-			
+		widget->DrawString(&pos, &name, 20, y_pos);
+
 		y_count++;
-		index++;
+		if (y_pos > size.y - 2 * (10 + text_size))
+		{
+			break;
+		}
 	}
 
-	ModWidget::StoreSave(widget->mods);
+	// Draw prev button
+	widget->SetTextColor(&text_color);
+	if (!widget->PreviousPageAvailable())
+	{
+		widget->SetTextColor(&disabled_color);
+	}
+	else if (BtnIsHovered(&mouse_pos, 20, 20 + text_size, size.y - text_size))
+	{
+		widget->hover_state = HoverState::Previous;
+		widget->SetTextColor(&hover_color);
+	}
+	widget->DrawString(&pos, &wstr_prev, 20, size.y - text_size);
+
+	// Draw next button
+	widget->SetTextPivot(plasma::TextPivot::Right);
+	widget->SetTextColor(&text_color);
+
+	if (!widget->NextPageAvailable())
+	{
+		widget->SetTextColor(&disabled_color);
+	}
+	else if (BtnIsHovered(&mouse_pos, size.x - text_size - 20, size.x -20, size.y - text_size))
+	{
+		widget->hover_state = HoverState::Next;
+		widget->SetTextColor(&hover_color);
+	}
+	widget->DrawString(&pos, &wstr_next, size.x - 20, size.y - text_size);
+
+	// Draw current page
+	widget->SetTextColor(&text_color);
+	widget->SetTextPivot(plasma::TextPivot::Center);
+	std::wstring page = std::to_wstring(widget->page + 1) + L"/" + std::to_wstring((int)(widget->mods->size() / 7) + 1);
+	widget->DrawString(&pos, &page, size.x / 2, size.y - text_size);
 }
 
 void mod::ModWidget::Init()

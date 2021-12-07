@@ -5,10 +5,10 @@
 extern "C" void cube__Game__MouseUp(cube::Game* game, cube::MouseButton mouse_button)
 {
 	std::wstring wstr_mod_node(L"mod-node");
-	plasma::Node* node = game->plasma_engine->root_node->FindChildByName(&wstr_mod_node);
-	if (node != nullptr && node->IsVisible())
+	plasma::Node* mod_node = game->plasma_engine->root_node->FindChildByName(&wstr_mod_node);
+	if (mod_node != nullptr && mod_node->IsVisible())
 	{
-		mod::ModWidget* widget = (mod::ModWidget*)node->widget1;
+		mod::ModWidget* widget = (mod::ModWidget*)mod_node->widget1;
 		widget->MouseUp(mouse_button);
 		return;
 	}
@@ -39,6 +39,9 @@ extern "C" void cube__Game__MouseUp(cube::Game* game, cube::MouseButton mouse_bu
 			case cube::StartMenuWidget::HoverState::StartGame:
 				game->gui.startmenu_node->display->SetVisibility(game->gui.startmenu_node->display->visibility.current_frame, 0);
 				game->gui.character_selection_node->display->SetVisibility(game->gui.character_selection_node->display->visibility.current_frame, 1);
+				break;
+			case cube::StartMenuWidget::HoverState::Mods:
+				mod_node->SetVisibility(true);
 				break;
 			case cube::StartMenuWidget::HoverState::None:
 			default:

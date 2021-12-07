@@ -54,16 +54,16 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 
 extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 {
-	std::wstring wstr_mod_node(L"mod-node");
+	/*std::wstring wstr_mod_node(L"mod-node");
 	plasma::Node* node = widget->game->plasma_engine->root_node->FindChildByName(&wstr_mod_node);
 	if (node != nullptr && node->IsVisible())
 	{
 		return;
-	}
+	}*/
 
 	const static float text_size = 36.0f; // Original	18.0f
 	const static float border_size = 4.0f; // Original	4.0f
-	const int num_btns = 4;
+	const int num_btns = 5;
 
 	float width;
 	int y_offset = -20;
@@ -84,6 +84,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	std::wstring btn_txt[num_btns] = {
 		L"Start Game",
 		L"Continue",
+		L"Mods",
 		L"Options",
 		L"Exit",
 	};
@@ -91,6 +92,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	cube::StartMenuWidget::HoverState states[num_btns] = {
 		cube::StartMenuWidget::HoverState::StartGame,
 		cube::StartMenuWidget::HoverState::Continue,
+		cube::StartMenuWidget::HoverState::Mods,
 		cube::StartMenuWidget::HoverState::Options,
 		cube::StartMenuWidget::HoverState::Exit,
 	};

@@ -24,6 +24,8 @@ plasma::Node* CreateModWidgetGUI(cube::Game* game)
 	// Create a widget and add it to the node specified.
 	widget->ctor(game, node, background, &allDlls);
 
+	node->SetVisibility(false);
+
 	return node;
 }
 
