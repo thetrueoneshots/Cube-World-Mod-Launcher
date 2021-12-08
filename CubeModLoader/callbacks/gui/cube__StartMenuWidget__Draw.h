@@ -1,16 +1,6 @@
 #pragma once
 #include "../../CWSDK/cwsdk.h"
 
-bool BtnIsHovered(FloatVector2* mouse_pos, float width, int height)
-{
-	if (mouse_pos->x < 0 || width <= mouse_pos->x || mouse_pos->y < height - 20 || height + 10 <= mouse_pos->y)
-	{
-		return false;
-	}
-	return true;
-}
-
-// Todo: Using time constraints and not instructions
 void DrawModdedText(cube::StartMenuWidget* widget)
 {
 	// Color rotation of the modded text
@@ -46,27 +36,22 @@ void DrawModdedText(cube::StartMenuWidget* widget)
 	// Draw modded text
 	widget->SetTextSize(200.0f);
 	widget->SetBorderSize(18.0f);
-	widget->SetTextPivot(cube::TextPivot::Center);
+	widget->SetTextPivot(plasma::TextPivot::Center);
 	widget->SetBorderColor(&border_color);
 	widget->SetTextColor(&modded_color);
-	widget->DrawText(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
+	widget->DrawString(&pos, &txt_modded, 0.5* widget->GetXSize(), height);
 }
 
-// Todo: Game version
-// Todo: Picroma credits
-// Todo: Show modloader version
-// Todo: Render credits chris & me
-// Todo: Link to bagel his youtube?
 extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 {
 	const static float text_size = 36.0f; // Original	18.0f
 	const static float border_size = 4.0f; // Original	4.0f
-	const int num_btns = 4;
+	const int num_btns = 5;
 
 	float width;
 	int y_offset = -20;
 	int btn_height = 50;
-	bool options_active;
+	bool other_widget_active;
 
 	FloatVector2 pos = FloatVector2(0, 0);
 	FloatVector2 mouse_pos;
@@ -82,6 +67,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	std::wstring btn_txt[num_btns] = {
 		L"Start Game",
 		L"Continue",
+		L"Mods",
 		L"Options",
 		L"Exit",
 	};
@@ -89,6 +75,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	cube::StartMenuWidget::HoverState states[num_btns] = {
 		cube::StartMenuWidget::HoverState::StartGame,
 		cube::StartMenuWidget::HoverState::Continue,
+		cube::StartMenuWidget::HoverState::Mods,
 		cube::StartMenuWidget::HoverState::Options,
 		cube::StartMenuWidget::HoverState::Exit,
 	};
@@ -104,11 +91,22 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 
 	mouse_pos = *widget->GetRelativeMousePosition(&mouse_pos);
 	width = widget->GetXSize();
-	options_active = widget->game->gui.options_widget->node->display->IsVisible();
+	other_widget_active = widget->game->gui.options_widget->node->display->IsVisible();
+
+	// If options widget is not active, check if the mod widget is active
+	if (!other_widget_active)
+	{
+		std::wstring wstr_mod_node(L"mod-node");
+		plasma::Node* node = widget->game->plasma_engine->root_node->FindChildByName(&wstr_mod_node);
+		if (node != nullptr && node->IsVisible())
+		{
+			other_widget_active = true;
+		}
+	}
 
 	widget->SetTextSize(text_size);
 	widget->SetBorderSize(border_size);
-	widget->SetTextPivot(cube::TextPivot::Center);
+	widget->SetTextPivot(plasma::TextPivot::Center);
 	widget->SetBorderColor(&border_color);
 	widget->hover_state = cube::StartMenuWidget::HoverState::None;
 
@@ -116,7 +114,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	for (int i = 0; i < num_btns; i++)
 	{
 		int btn_y = y_offset + i * btn_height;
-		if (!BtnIsHovered(&mouse_pos, width, btn_y) || options_active)
+		if (!plasma::Widget::IsSquareHovered(&mouse_pos, 0, btn_y - 20, width, 30))
 		{
 			widget->SetTextColor(&text_color);
 		}
@@ -133,7 +131,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 
 			if (character_slot < 0 || character_slot >= character_count)
 			{
-				if (BtnIsHovered(&mouse_pos, width, btn_y))
+				if (plasma::Widget::IsSquareHovered(&mouse_pos, 0, btn_y - 20, width, 30))
 				{
 					widget->hover_state = cube::StartMenuWidget::HoverState::None;
 				}
@@ -141,11 +139,11 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 			}
 		}
 
-		widget->DrawText(&pos, &btn_txt[i], 0.5 * width, btn_y);
+		widget->DrawString(&pos, &btn_txt[i], 0.5 * width, btn_y);
 	}
 
 	widget->SetScalableFont(&font1);
-	widget->SetTextPivot(cube::TextPivot::Left);
+	widget->SetTextPivot(plasma::TextPivot::Left);
 	widget->SetTextSize(12.0f);
 	widget->SetBorderSize(3.0f);
 	widget->SetTextColor(&text_color);
@@ -154,7 +152,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	position = *widget->GetSomeVector2(&position);
 
 	Matrix4 mat;
-	widget->node->CW_100EE0(&mat);
+	widget->node->LoadSomeMatrix(&mat);
 	float f9 = 10.0f;
 	float f1 = widget->game->height - 15;
 	float f8 = mat._24;
@@ -190,7 +188,7 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	int offset = 20;
 	for (int i = 0; i < 3; i++)
 	{
-		widget->DrawText(&pos, &credits[i], f7 + (width - widget->game->width) / 2, f6 - i * offset);
+		widget->DrawString(&pos, &credits[i], f7 + (width - widget->game->width) / 2, f6 - i * offset);
 		widget->SetScalableFont(&font2);
 		widget->SetTextSize(20.0f);
 		offset = 25;
@@ -202,11 +200,11 @@ extern "C" void cube__StartMenuWidget__Draw(cube::StartMenuWidget * widget)
 	};
 	widget->SetScalableFont(&font1);
 	widget->SetTextSize(12.0f);
-	widget->SetTextPivot(cube::TextPivot::Right);
+	widget->SetTextPivot(plasma::TextPivot::Right);
 
 	for (int i = 0; i < 2; i++)
 	{
-		widget->DrawText(&pos, &versions[i], -f7 + (width + widget->game->width) / 2, f6 - i * 20);
+		widget->DrawString(&pos, &versions[i], -f7 + (width + widget->game->width) / 2, f6 - i * 20);
 	}
 	
 };

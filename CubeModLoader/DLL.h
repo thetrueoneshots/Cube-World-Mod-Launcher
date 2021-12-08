@@ -18,6 +18,7 @@ class DLL
 		FARPROC MakeMod;
 
 		GenericMod* mod;
+        bool enabled;
 
         DLL(std::string fileName);
         HMODULE Load();

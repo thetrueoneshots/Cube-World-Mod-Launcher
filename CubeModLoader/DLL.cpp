@@ -4,6 +4,7 @@
 DLL::DLL(std::string fileName) {
     this->fileName = fileName;
     this->handle = nullptr;
+    this->enabled = true;
 }
 
 HMODULE DLL::Load() {

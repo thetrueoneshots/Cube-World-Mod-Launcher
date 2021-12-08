@@ -24,7 +24,8 @@
 using namespace std;
 
 GLOBAL void* base; // Module base
-GLOBAL vector <DLL*> modDLLs; // Every mod we've loaded
+GLOBAL vector <DLL*> modDLLs; // Enabled mods loaded
+GLOBAL vector <DLL*> allDlls; // All available mods
 GLOBAL vector <DLL*> legacyDLLs; // cwmods
 GLOBAL HMODULE hSelf; // A handle to ourself, to prevent being unloaded
 GLOBAL void** initterm_eReference; // A pointer-pointer to a function which is run extremely soon after starting, or after being unpacked
@@ -52,6 +53,7 @@ GETTER_VAR(void*, initterm_e); // A pointer to that function
 #include "callbacks/ChunkRemeshedHandler.h"
 
 #include "callbacks/gui/cube__StartMenuWidget__Draw.h"
+#include "callbacks/gui/cube__GUI__Load.h"
 #include "callbacks/creature/cube__Creature__GetArmor.h"
 #include "callbacks/game/cube__Game__MouseUp.h"
 
@@ -59,6 +61,10 @@ void SetupHandlers() {
     setup_function(cube__Creature__GetArmor);
     setup_function(cube__StartMenuWidget__Draw);
     setup_function(cube__Game__MouseUp);
+
+    // Should be totally reverse engineered if put here.
+    // HUGE effort, but might be worth!
+    //setup_function(cube__GUI__Load);
      
     SetupChatHandler();
     SetupP2PRequestHandler();
@@ -117,7 +123,7 @@ extern "C" void StartMods() {
         } while (FindNextFile(hFind, &data));
         FindClose(hFind);
     }
-
+    
     // Find all the functions the mods may export
     for (DLL* dll: modDLLs) {
         MUST_IMPORT(dll, ModMajorVersion);
@@ -148,8 +154,18 @@ extern "C" void StartMods() {
 			Popup("Error", msg);
 			exit(1);
 		}
-		
 	}
+
+    mod::ModWidget::LoadSave(&modDLLs);
+    allDlls = std::vector<DLL*>(modDLLs.begin(), modDLLs.end());
+    for (int i = 0; i < modDLLs.size(); i++)
+    {
+        if (!modDLLs.at(i)->enabled)
+        {
+            modDLLs.erase(modDLLs.begin() + i);
+            i--;
+        }
+    }
 
     // Run Initialization routines on all mods
     for (DLL* dll: modDLLs) {
