@@ -4,6 +4,7 @@
 #include <process.h>
 
 static std::string file_name = "mods-settings.cwb";
+static const int MODS_PER_PAGE = 7;
 void* VTABLE[43];
 
 mod::ModWidget* mod::ModWidget::ctor(cube::Game* game, plasma::Node* node, plasma::Node* background, std::vector<DLL*>* mods)
@@ -50,7 +51,8 @@ void mod::ModWidget::MouseUp(cube::MouseButton mouse_button)
 		this->node->SetVisibility(false);
 		if (this->changed)
 		{
-			char* argument_list[] = { "cubeworld.exe", NULL };
+			// Restart the game
+			char* argument_list[] = { (char *)"cubeworld.exe", NULL };
 			_execvp("cubeworld.exe", argument_list);
 		}
 		break;
@@ -83,21 +85,12 @@ void mod::ModWidget::MouseUp(cube::MouseButton mouse_button)
 
 bool mod::ModWidget::NextPageAvailable()
 {
-	return (this->page + 1) * 7 < this->mods->size();
+	return (this->page + 1) * MODS_PER_PAGE < this->mods->size();
 }
 
 bool mod::ModWidget::PreviousPageAvailable()
 {
 	return this->page > 0;
-}
-
-bool BtnIsHovered(FloatVector2* mouse_pos, float min_x, float max_x, int height)
-{
-	if (mouse_pos->x < min_x || max_x <= mouse_pos->x || mouse_pos->y < height - 20 || height + 10 <= mouse_pos->y)
-	{
-		return false;
-	}
-	return true;
 }
 
 void mod::ModWidget::Draw(ModWidget* widget)
@@ -151,7 +144,7 @@ void mod::ModWidget::Draw(ModWidget* widget)
 
 	// Draw x to exit
 	widget->SetTextPivot(plasma::TextPivot::Right);
-	if (BtnIsHovered(&mouse_pos, size.x - 30, size.x - 10, 20 + text_size))
+	if (plasma::Widget::IsSquareHovered(&mouse_pos, size.x - 30, 20, 20, 30))
 	{
 		widget->SetTextColor(&hover_color);
 		widget->hover_state = ModWidget::HoverState::Exit;
@@ -178,7 +171,7 @@ void mod::ModWidget::Draw(ModWidget* widget)
 		}
 
 		int y_pos = (4 + 2 * y_count) * (10 + text_size);
-		if (BtnIsHovered(&mouse_pos, 0, size.x, y_pos))
+		if (plasma::Widget::IsSquareHovered(&mouse_pos, 0, y_pos - 20, size.x, 30))
 		{
 			widget->SetTextColor(&hover_color);
 			widget->hover_state = HoverState::Toggle;
@@ -204,7 +197,7 @@ void mod::ModWidget::Draw(ModWidget* widget)
 	{
 		widget->SetTextColor(&disabled_color);
 	}
-	else if (BtnIsHovered(&mouse_pos, 20, 20 + text_size, size.y - text_size))
+	else if (plasma::Widget::IsSquareHovered(&mouse_pos, 20, size.y - text_size - 20, 20, 30))
 	{
 		widget->hover_state = HoverState::Previous;
 		widget->SetTextColor(&hover_color);
@@ -219,7 +212,7 @@ void mod::ModWidget::Draw(ModWidget* widget)
 	{
 		widget->SetTextColor(&disabled_color);
 	}
-	else if (BtnIsHovered(&mouse_pos, size.x - text_size - 20, size.x -20, size.y - text_size))
+	else if (plasma::Widget::IsSquareHovered(&mouse_pos, size.x - text_size - 20, size.y - text_size - 20, 20, 30))
 	{
 		widget->hover_state = HoverState::Next;
 		widget->SetTextColor(&hover_color);
@@ -229,7 +222,7 @@ void mod::ModWidget::Draw(ModWidget* widget)
 	// Draw current page
 	widget->SetTextColor(&text_color);
 	widget->SetTextPivot(plasma::TextPivot::Center);
-	std::wstring page = std::to_wstring(widget->page + 1) + L"/" + std::to_wstring((int)(widget->mods->size() / 7) + 1);
+	std::wstring page = std::to_wstring(widget->page + 1) + L"/" + std::to_wstring((int)(widget->mods->size() / MODS_PER_PAGE) + 1);
 	widget->DrawString(&pos, &page, size.x / 2, size.y - text_size);
 }
 
