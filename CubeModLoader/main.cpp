@@ -11,7 +11,7 @@
 #include "../CubeModLoader/CWSDK/cwsdk.h"
 
 #define MOD_MAJOR_VERSION 7
-#define MOD_MINOR_VERSION 2
+#define MOD_MINOR_VERSION 3
 
 #define CUBE_VERSION "1.0.0-1"
 #define CUBE_PACKED_CRC 0xC7682619
@@ -55,10 +55,12 @@ GETTER_VAR(void*, initterm_e); // A pointer to that function
 #include "callbacks/gui/cube__StartMenuWidget__Draw.h"
 #include "callbacks/gui/cube__GUI__Load.h"
 #include "callbacks/creature/cube__Creature__GetArmor.h"
+#include "callbacks/creature/cube__Creature__OnPlayerDeath.h"
 #include "callbacks/game/cube__Game__MouseUp.h"
 
 void SetupHandlers() {
     setup_function(cube__Creature__GetArmor);
+    setup_function(cube__Creature__OnPlayerDeath);
     setup_function(cube__StartMenuWidget__Draw);
     setup_function(cube__Game__MouseUp);
 

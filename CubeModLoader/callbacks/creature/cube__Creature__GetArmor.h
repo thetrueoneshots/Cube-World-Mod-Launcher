@@ -1,56 +1,31 @@
 #pragma once
 
-bool cube__Item__ClassCanWearItem(cube::Item* item, int classType)
-{
-    return ((bool(*)(cube::Item*, int))Offset(base, 0x1094D0))(item, classType);
-}
-
-float cube__Item__GetArmor(cube::Item* item, cube::Creature* creature)
-{
-    return ((float(*)(cube::Item*, cube::Creature*))Offset(base, 0x108D50))(item, creature);
-}
-
-bool cube__Item__IsValidEquipment(cube::Item* item, int category, cube::Creature* creature)
-{
-    if (item->category != category)
-    {
-        return false;
-    }
-
-    if (creature->entity_data.hostility_type != 0 || cube__Item__ClassCanWearItem(item, creature->entity_data.classType))
-    {
-        return true;
-    }
-
-    return false;
-}
-
 extern "C" float cube__Creature__GetArmor(cube::Creature * creature)
 {
     float armor = 0;
 
     cube::Item* chest = &creature->entity_data.equipment.chest;
-    if (cube__Item__IsValidEquipment(chest, 4, creature))
+    if (chest->IsValidEquipmentForCreature(creature, 4))
     {
-        armor += cube__Item__GetArmor(chest, creature);
+        armor += chest->GetArmor(creature);
     }
 
     cube::Item* feet = &creature->entity_data.equipment.feet;
-    if (cube__Item__IsValidEquipment(feet, 6, creature))
+    if (feet->IsValidEquipmentForCreature(creature, 6))
     {
-        armor += cube__Item__GetArmor(feet, creature);
+        armor += feet->GetArmor(creature);
     }
 
     cube::Item* hands = &creature->entity_data.equipment.hands;
-    if (cube__Item__IsValidEquipment(hands, 5, creature))
+    if (hands->IsValidEquipmentForCreature(creature, 5))
     {
-        armor += cube__Item__GetArmor(hands, creature);
+        armor += hands->GetArmor(creature);
     }
 
     cube::Item* shoulder = &creature->entity_data.equipment.shoulder;
-    if (cube__Item__IsValidEquipment(shoulder, 7, creature))
+    if (shoulder->IsValidEquipmentForCreature(creature, 7))
     {
-        armor += cube__Item__GetArmor(shoulder, creature);
+        armor += shoulder->GetArmor(creature);
     }
 
     auto flags2 = creature->entity_data.appearance.flags2;
