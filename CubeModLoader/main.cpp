@@ -53,15 +53,19 @@ GETTER_VAR(void*, initterm_e); // A pointer to that function
 #include "callbacks/ChunkRemeshedHandler.h"
 
 #include "callbacks/gui/cube__StartMenuWidget__Draw.h"
+#include "callbacks/gui/cube__CharacterPreviewWidget__Draw.h"
 #include "callbacks/gui/cube__GUI__Load.h"
 #include "callbacks/creature/cube__Creature__GetArmor.h"
 #include "callbacks/creature/cube__Creature__OnPlayerDeath.h"
+#include "callbacks/creature/cube__Creature__OnCreatureDeath.h"
 #include "callbacks/game/cube__Game__MouseUp.h"
 
 void SetupHandlers() {
     setup_function(cube__Creature__GetArmor);
     setup_function(cube__Creature__OnPlayerDeath);
+    setup_function(cube__Creature__OnCreatureDeath);
     setup_function(cube__StartMenuWidget__Draw);
+    //setup_function(cube__CharacterPreviewWidget__Draw);
     setup_function(cube__Game__MouseUp);
 
     // Should be totally reverse engineered if put here.
