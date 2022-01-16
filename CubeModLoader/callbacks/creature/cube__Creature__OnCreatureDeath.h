@@ -5,8 +5,6 @@ extern "C" void cube__Creature__OnCreatureDeath(cube::Creature* creature)
 	cube::Game* game = cube::GetGame();
 	creature->entity_data.HP = 0;
 
-	game->PrintMessage(L"Creature = ded \n");
-
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnCreatureDeathPriority == (GenericMod::Priority)priority) {
