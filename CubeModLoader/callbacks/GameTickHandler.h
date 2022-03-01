@@ -62,7 +62,7 @@ void ASMGameTickHandler() {
 		PUSH_ALL
 
         "mov rcx, rax \n" // cube::Game*
-
+		
         PREPARE_STACK
 
         "call GameTickHandler \n"

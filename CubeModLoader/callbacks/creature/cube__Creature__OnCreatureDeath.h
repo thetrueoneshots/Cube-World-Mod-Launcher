@@ -1,6 +1,6 @@
 #pragma once
 
-extern "C" void cube__Creature__OnCreatureDeath(cube::Creature* creature)
+extern "C" void cube__Creature__OnCreatureDeath(cube::Creature* creature, cube::Creature* attacker)
 {
 	cube::Game* game = cube::GetGame();
 	creature->entity_data.HP = 0;
@@ -8,7 +8,7 @@ extern "C" void cube__Creature__OnCreatureDeath(cube::Creature* creature)
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnCreatureDeathPriority == (GenericMod::Priority)priority) {
-				dll->mod->OnCreatureDeath(game, creature);
+				dll->mod->OnCreatureDeath(game, creature, attacker);
 			}
 		}
 	}
@@ -18,8 +18,8 @@ GETTER_VAR(void*, ASM_cube__Creature__OnCreatureDeath_JMPBACK);
 __attribute__((naked)) void ASM_cube__Creature__OnCreatureDeath() {
 	asm(".intel_syntax \n"
 
-		// Move current cube::Game* to the first argument. 
-		// This does not have to be restored, because rcx is set to a value afterwards anyways
+		// This does not have to be restored, because rcx and rdx are set to a value afterwards anyways
+		"mov rdx, r15 \n"
 		"mov rcx, r13 \n"
 		"call cube__Creature__OnCreatureDeath \n"
 

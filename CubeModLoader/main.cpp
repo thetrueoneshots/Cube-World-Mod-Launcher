@@ -61,6 +61,8 @@ GETTER_VAR(void*, initterm_e); // A pointer to that function
 #include "callbacks/creature/cube__Creature__OnPlayerFallDeath.h"
 #include "callbacks/creature/cube__Creature__OnCreatureDeath.h"
 #include "callbacks/game/cube__Game__MouseUp.h"
+#include "callbacks/game/cube__Game__Update.h"
+#include "callbacks/item/cube__Item__OnGetBuyingPrice.h"
 
 void SetupHandlers() {
     setup_function(cube__Creature__GetArmor);
@@ -71,6 +73,8 @@ void SetupHandlers() {
     setup_function(cube__StartMenuWidget__Draw);
     //setup_function(cube__CharacterPreviewWidget__Draw);
     setup_function(cube__Game__MouseUp);
+    setup_function(cube__Game__Update);
+    setup_function(cube__Item__GetBuyingPrice);
 
     // Should be totally reverse engineered if put here.
     // HUGE effort, but might be worth!
