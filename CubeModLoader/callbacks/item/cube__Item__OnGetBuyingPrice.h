@@ -12,8 +12,22 @@ extern "C" void cube__Item__GetBuyingPrice(cube::Item* item, int* price)
 	}
 }
 
+extern "C" float powf(float a1, float a2)
+{
+	return std::powf(a1, a2);
+}
+
 __attribute__((naked)) void ASM_cube__Item__GetBuyingPrice() {
 		asm(".intel_syntax \n"
+			
+			// Save r8 before calling powf
+			"push	r8 \n"
+			"call	powf \n"
+			"pop	r8 \n"
+			"mulss  xmm0, xmm6 \n"
+			"mov    eax, 1 \n"
+			"movaps xmm6, xmmword ptr [rsp+0x20] \n"
+
 			// Old code
 			"cvttss2si ecx, xmm0 \n"
 			"cmp     ecx, eax \n"
@@ -35,5 +49,5 @@ __attribute__((naked)) void ASM_cube__Item__GetBuyingPrice() {
 }
 
 void setup_cube__Item__GetBuyingPrice() {
-    WriteFarJMP(CWOffset(0x109E21), ASM_cube__Item__GetBuyingPrice);
+    WriteFarJMP(CWOffset(0x109E0E), ASM_cube__Item__GetBuyingPrice);
 }

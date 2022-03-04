@@ -60,6 +60,7 @@ GETTER_VAR(void*, initterm_e); // A pointer to that function
 #include "callbacks/creature/cube__Creature__OnPlayerDrownDeath.h"
 #include "callbacks/creature/cube__Creature__OnPlayerFallDeath.h"
 #include "callbacks/creature/cube__Creature__OnCreatureDeath.h"
+#include "callbacks/creature/cube__Creature__CanEquipItem.h"
 #include "callbacks/game/cube__Game__MouseUp.h"
 #include "callbacks/game/cube__Game__Update.h"
 #include "callbacks/item/cube__Item__OnGetBuyingPrice.h"
@@ -70,6 +71,7 @@ void SetupHandlers() {
     setup_function(cube__Creature__OnPlayerDrownDeath);
     setup_function(cube__Creature__OnPlayerFallDeath);
     setup_function(cube__Creature__OnCreatureDeath);
+    setup_function(cube__Creature__CanEquipItem);
     setup_function(cube__StartMenuWidget__Draw);
     //setup_function(cube__CharacterPreviewWidget__Draw);
     setup_function(cube__Game__MouseUp);
