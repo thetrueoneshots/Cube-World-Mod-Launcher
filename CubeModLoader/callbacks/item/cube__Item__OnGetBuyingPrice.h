@@ -1,8 +1,10 @@
 #pragma once
 #include "cwsdk.h"
 
-extern "C" void cube__Item__GetBuyingPrice(cube::Item* item, int* price)
+extern "C" void cube__Item__GetBuyingPrice(float base_cost, cube::Item* item, int* price)
 {
+	*price = std::max<int>(base_cost * std::powf(2, item->rarity), 1);
+
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnGetItemBuyingPricePriority == (GenericMod::Priority)priority) {
@@ -12,31 +14,16 @@ extern "C" void cube__Item__GetBuyingPrice(cube::Item* item, int* price)
 	}
 }
 
-extern "C" float powf(float a1, float a2)
-{
-	return std::powf(a1, a2);
-}
-
 __attribute__((naked)) void ASM_cube__Item__GetBuyingPrice() {
 		asm(".intel_syntax \n"
 			
-			// Save r8 before calling powf
-			"push	r8 \n"
-			"call	powf \n"
-			"pop	r8 \n"
-			"mulss  xmm0, xmm6 \n"
-			"mov    eax, 1 \n"
+			"movaps xmm0, xmm6 \n"
 			"movaps xmm6, xmmword ptr [rsp+0x20] \n"
 
-			// Old code
-			"cvttss2si ecx, xmm0 \n"
-			"cmp     ecx, eax \n"
-			"cmovg   eax, ecx \n"
-
-			// Get price pointer
 			"push	rax \n"
-			"lea	rdx, [rsp] \n"
-			"mov	rcx, r8 \n"
+			"mov	rdx, r8 \n" // Item pointer
+			"lea	r8, [rsp] \n" // Price pointer
+
 			PREPARE_STACK
 			"call cube__Item__GetBuyingPrice \n"
 			RESTORE_STACK
