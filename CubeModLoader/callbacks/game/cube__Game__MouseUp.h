@@ -58,14 +58,11 @@ GETTER_VAR(void*, ASM_cube__Game__MouseUp_jmpback);
 __attribute__((naked)) void ASM_cube__Game__MouseUp() {
 	asm(".intel_syntax \n"
 		PUSH_ALL
-		"push rbp \n"
-		"mov rbp, rsp \n"
 		PREPARE_STACK
 		"call cube__Game__MouseUp \n"
 		RESTORE_STACK
-		"mov rsp, rbp \n"
-		"pop rbp \n"
 		POP_ALL
+		"xor r12d, r12d \n"
 		DEREF_JMP(ASM_cube__Game__MouseUp_jmpback)
 	);
 }

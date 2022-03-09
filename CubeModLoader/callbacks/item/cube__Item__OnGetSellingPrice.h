@@ -4,7 +4,7 @@
 extern "C" int cube__Item__OnGetSellingPrice(cube::Item* item)
 {
 	int buyingPrice = item->GetBuyingPrice();
-	int sellingPrice = std::max(0.5f * std::sqrt(price), 1);
+	int sellingPrice = std::max<float>(0.5f * std::sqrt(buyingPrice), 1);
 
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
