@@ -103,7 +103,7 @@ extern "C" bool cube__Item__OnClassCanWearItem (cube::Item* item, int classType)
 	for (uint8_t priority = 0; priority <= 4; priority += 1) {
 		for (DLL* dll : modDLLs) {
 			if (dll->mod->OnClassCanWearItemPriority == (GenericMod::Priority)priority) {
-				dll->mod->OnClassCanWearItem(item, &retval);
+				dll->mod->OnClassCanWearItem(item, classType, &retval);
 			}
 		}
 	}
