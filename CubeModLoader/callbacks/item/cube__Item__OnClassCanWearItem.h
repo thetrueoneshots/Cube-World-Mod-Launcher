@@ -66,7 +66,7 @@ extern "C" bool cube__Item__OnClassCanWearItem (cube::Item* item, int classType)
 	}
 	else // Chest, gloves, boots and shoulders
 	{
-		switch (item->material)
+		switch (item->material - 1)
 		{
 		case cube::Item::MaterialType::Iron:
 		case 3: // Undefined
@@ -75,24 +75,24 @@ extern "C" bool cube__Item__OnClassCanWearItem (cube::Item* item, int classType)
 		case cube::Item::MaterialType::Sandstone:
 		case cube::Item::MaterialType::Plant:
 		case cube::Item::MaterialType::Cotton:
-			retval = classType == cube::Creature::ClassType::Warrior;
+			retval = (classType == cube::Creature::ClassType::Warrior);
 			break;
 		case cube::Item::MaterialType::Linnen:
 		case cube::Item::MaterialType::Bronze:
 		case cube::Item::MaterialType::Mail:
-			retval = classType == cube::Creature::ClassType::Rogue;
+			retval = (classType == cube::Creature::ClassType::Rogue);
 			break;
 		case cube::Item::MaterialType::Saurian:
 		case cube::Item::MaterialType::Silk:
 		case cube::Item::MaterialType::Calcio:
 		case cube::Item::MaterialType::Flannell:
-			retval = classType == cube::Creature::ClassType::Ranger;
+			retval = (classType == cube::Creature::ClassType::Ranger);
 			break;
 		case cube::Item::MaterialType::Ice:
 		case cube::Item::MaterialType::Glass:
 		case cube::Item::MaterialType::Felt:
 		case cube::Item::MaterialType::Rivet:
-			retval = classType == cube::Creature::ClassType::Mage;
+			retval = (classType == cube::Creature::ClassType::Mage);
 			break;
 		default:
 			retval = true;
